@@ -437,3 +437,10 @@ Board.Change()
 - 配置が成功したときだけ `RecordManager` が棋譜を保存します。
 - 配置成功後、駒は `PieceCursor` から切り離されて盤面に固定されます。
 - 最後に `Board.Change()` によって手番が切り替わります。
+
+## record.jsonのありか
+
+- ローカルで動かしている場合
+  "C:\Users\name\AppData\LocalLow\DefaultCompany\5ryujin\record.json"
+- ブラウザ上で動かしている場合
+  各自のブラウザの保存領域に保存されている
