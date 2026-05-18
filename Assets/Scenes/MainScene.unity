@@ -2796,19 +2796,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   number: 0
   pieces:
-  - {fileID: 4916683864977085302, guid: deb681f294cef834dbf8e90c596ce4da, type: 3}
-  - {fileID: 1839925252295122685, guid: 2f3cb09afa9fa4943a04b824ec35bf08, type: 3}
-  - {fileID: 7747322136819803338, guid: 54871f65d75b7d348b4e816e561961a5, type: 3}
-  - {fileID: 8117818306376423326, guid: 4dd46a7a23ef79c458bd7e082655a979, type: 3}
-  - {fileID: 380541494030335059, guid: a19ff1b57e3467d44a4a51c539f1d90e, type: 3}
-  - {fileID: 1926151044042920036, guid: 6f84214b60ba66b40a7607515acd9dac, type: 3}
-  - {fileID: 3592300335686093817, guid: 7ea6f7d16a3c8a34aa450eb37381293c, type: 3}
-  - {fileID: 4044608685038442759, guid: 3bf9a967b038a9e439202b309f3179f9, type: 3}
-  - {fileID: 1236273358709883321, guid: 55bfc1b3e81517146905bb8a81c7d6a9, type: 3}
-  - {fileID: 7429804384838392362, guid: e99efca67a3da4441b9158411bcb3f20, type: 3}
-  - {fileID: 5992867537122223747, guid: fe05501a4498f664fa315fb8a4b6a024, type: 3}
-  - {fileID: 6535151251035351827, guid: 6d46307787813da41afe30b239b04cea, type: 3}
-  - {fileID: 6535151251035351827, guid: 8e65b9b06505f2c43915c3ced47cc643, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   childMagnets: []
   childTiles: []
   color1p:
@@ -3921,19 +3921,7 @@ MonoBehaviour:
   canvas: {fileID: 1639661655}
   turnText: {fileID: 226626661}
   tmp: {fileID: 1648269577}
-  images:
-  - {fileID: 1009539215136511193, guid: 52413de301576614fbae5148c9967918, type: 3}
-  - {fileID: 4935827054765643540, guid: 7161caf2dd92048439a26593d250d22c, type: 3}
-  - {fileID: 3746234136436353536, guid: 6ba69660f9fde99438e1362fd5d51707, type: 3}
-  - {fileID: 5283018256552271797, guid: d958cf0bae6e5bb4182787f0df5872e3, type: 3}
-  - {fileID: 1205346518516887456, guid: 45af9a71c68e53c439372d33d29aa488, type: 3}
-  - {fileID: 4209323094250547186, guid: fc4428c941b3c844b9ddb7b36148185e, type: 3}
-  - {fileID: 1024609425397373140, guid: db23cace7f749ce44938748a8f622a5b, type: 3}
-  - {fileID: 1736868280177509221, guid: 6641a4a1332198a48b07b84dc4bb1057, type: 3}
-  - {fileID: 8806943089135257866, guid: 8f7923c614a724547b40fdcd3e1110ad, type: 3}
-  - {fileID: 2788692057035301855, guid: d8bf2d114914a8148b9f2249aef72036, type: 3}
-  - {fileID: 8942765046088375483, guid: 2aeb828a1bff19f4abd240ef2ce03b15, type: 3}
-  - {fileID: 7404571072737295188, guid: 2f71b8f4bde208d4189185ca3bb6746c, type: 3}
+  images: []
   pc: {fileID: 1289163782}
 --- !u!4 &1706076286
 Transform:

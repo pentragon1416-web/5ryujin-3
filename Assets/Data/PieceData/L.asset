@@ -12,6 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e467c9e382198a4fa3c6233a81fe55c, type: 3}
   m_Name: L
   m_EditorClassIdentifier: 
-  pieceType: 0
-  tiles: []
-  magnets: []
+  pieceType: 2
+  tiles:
+  - {x: 0, y: 0}
+  - {x: 0, y: -1}
+  - {x: 1, y: -1}
+  - {x: 0, y: 1}
+  - {x: 0, y: 2}
+  magnets:
+  - {x: 0, y: 2.5}
+  - {x: 1.5, y: -1}

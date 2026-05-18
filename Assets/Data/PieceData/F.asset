@@ -13,5 +13,13 @@ MonoBehaviour:
   m_Name: F
   m_EditorClassIdentifier: 
   pieceType: 0
-  tiles: []
-  magnets: []
+  tiles:
+  - {x: -1, y: 1}
+  - {x: 0, y: 1}
+  - {x: 0, y: 0}
+  - {x: 1, y: 0}
+  - {x: 0, y: -1}
+  magnets:
+  - {x: -1.5, y: 1}
+  - {x: 1.5, y: 0}
+  - {x: 0, y: -1.5}
