@@ -479,4 +479,27 @@ public class Map
     }
 }
 
+using System;
+
+[Serializable]
+public class MoveData
+{
+    public int turn;
+    public bool player;
+    public PieceType pieceType;
+    public int rotation;
+    public bool flipped;
+    public int x;
+    public int y;
+    public bool touchdown;
+}
+
+public class PieceData : ScriptableObject
+{
+    public PieceType pieceType;
+    public List<Vector2Int> tiles = new();
+    public List<Vector2> magnets = new();
+}
+
+これらのクラスからMoveDataの情報から、rotationやflipedを反映させた
 ```
