@@ -30,6 +30,8 @@ public class PieceCursor : MonoBehaviour
 
     [Header("棋譜記録")]
     public RecordManager recordManager;
+    [Header("PieceDatabase")]
+    public PieceDatabase pieceDatabase;
 
     private bool isOperatingUI = false;
 
@@ -151,6 +153,25 @@ public class PieceCursor : MonoBehaviour
         bool player = Board.turn;
 
         bool touchdown = (pieceType == PieceType.td);
+        // =========================
+        // ここがMoveData生成部分
+        // =========================
+        MoveData md = new MoveData
+        {
+            turn = 0, // 必要ならRecordManager側で管理してもOK
+            player = player,
+            pieceType = pieceType,
+            rotation = rotation,
+            flipped = flipped,
+            x = x,
+            y = y,
+            touchdown = touchdown
+        };
+        // =========================
+        // ここがMoveData生成部分
+        // =========================
+        PieceInfo info = new PieceInfo(pieceDatabase.Get(pieceType));
+        info.TestDebug(md);
 
         if (mm.Add(this))
         {
