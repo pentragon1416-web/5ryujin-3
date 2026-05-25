@@ -12,7 +12,7 @@ public class MoveDataLoader : MonoBehaviour
     private List<PieceEntry> pieceEntries;
 
     private Dictionary<PieceType, GameObject> pieceDict;
-    private MdMap mm;
+    public MdMap mm;
 
     [System.Serializable]
     public class PieceEntry
@@ -45,34 +45,45 @@ public class MoveDataLoader : MonoBehaviour
 
     public void LoadMoveData(MoveData md)
     {
-        // ストック減少処理（そのまま）
+        // ストック減少処理
         Board.instance.DecrementStock(md.player, md.pieceType);
 
-        // 生成位置（そのまま）
-        Vector3 pos = new Vector3(md.x, 0f, md.y);
-
-        // プレハブ取得（ロジック維持）
+        // プレハブ取得
         if (!pieceDict.TryGetValue(md.pieceType, out GameObject prefab))
         {
             Debug.LogError($"Prefab not found for {md.pieceType}");
             return;
         }
 
-        // 生成（そのまま）
+        // 生成位置（MoveDataの中心）
+        Vector3 pos = new Vector3(md.x, md.y, 0f);
+
         GameObject obj = Instantiate(prefab, pos, Quaternion.identity);
 
-        // 回転（そのまま）
-        obj.transform.rotation = Quaternion.Euler(0f, md.rotation * 90f, 0f);
+        // =========================
+        // rotation（基本回転）
+        // =========================
+        obj.transform.rotation = Quaternion.Euler(0f, 0f, md.rotation);
 
-        // フリップ（そのまま）
+        // =========================
+        // flipped（Z回転ベースで補正）
+        // =========================
         if (md.flipped)
         {
-            Vector3 scale = obj.transform.localScale;
-            scale.x *= -1;
-            obj.transform.localScale = scale;
+            // 「piece.transform.Rotate(0, 0, 90) を参考」
+            // → Z軸で90度追加回転として扱う
+            obj.transform.Rotate(0f, 180f, 0f);
         }
-
-        // マップ登録（そのまま）
+        // =========================
+        // ★追加：プレイヤーによる色変更
+        // =========================
+        Color c = md.player ? Color.black : Color.red;
+        SpriteRenderer[] renderers = obj.GetComponentsInChildren<SpriteRenderer>();
+        foreach (var r in renderers)
+        {
+            r.color = c;
+        }
+        // マップ登録
         mm.Add(md);
     }
     public void LoadMoveDataList(List<MoveData> moveList)
@@ -81,5 +92,80 @@ public class MoveDataLoader : MonoBehaviour
         {
             LoadMoveData(moveList[i]);
         }
+    }
+
+    public void TestLoad()
+    {
+        List<MoveData> mdList = new List<MoveData>
+        {
+            new MoveData
+            {
+                turn = 0,
+                player = false,
+                pieceType = PieceType.P,
+                rotation = 180,
+                flipped = false,
+                x = 26,
+                y = 1,
+                touchdown = false
+            },
+            new MoveData
+            {
+                turn = 0,
+                player = true,
+                pieceType = PieceType.P,
+                rotation = 0,
+                flipped = false,
+                x = 14,
+                y = 28,
+                touchdown = false
+            },
+            new MoveData
+            {
+                turn = 0,
+                player = false,
+                pieceType = PieceType.W,
+                rotation = 270,
+                flipped = false,
+                x = 27,
+                y = 4,
+                touchdown = false
+            },
+            new MoveData
+            {
+                turn = 0,
+                player = true,
+                pieceType = PieceType.V,
+                rotation = 0,
+                flipped = false,
+                x = 15,
+                y = 25,
+                touchdown = false
+            },
+            new MoveData
+            {
+                turn = 0,
+                player = false,
+                pieceType = PieceType.V,
+                rotation = 90,
+                flipped = false,
+                x = 30,
+                y = 6,
+                touchdown = false
+            },
+            new MoveData
+            {
+                turn = 0,
+                player = true,
+                pieceType = PieceType.V,
+                rotation = 180,
+                flipped = false,
+                x = 18,
+                y = 23,
+                touchdown = false
+            }
+        };
+
+        LoadMoveDataList(mdList);
     }
 }

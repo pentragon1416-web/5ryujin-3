@@ -32,8 +32,11 @@ public class PieceCursor : MonoBehaviour
     public RecordManager recordManager;
     [Header("PieceDatabase")]
     public PieceDatabase pieceDatabase;
+    [Header("MoveDataLoader")]
+    public MoveDataLoader moveDataLoader;
 
     private bool isOperatingUI = false;
+    private List<MoveData> moveDataList = new();
 
     void Start()
     {
@@ -115,6 +118,7 @@ public class PieceCursor : MonoBehaviour
             Rotate(scroll);
         }
 
+
         if (Input.GetMouseButtonDown(0)) Put();
         if (Input.GetMouseButtonDown(1)) FlipButton();
     }
@@ -177,7 +181,7 @@ public class PieceCursor : MonoBehaviour
         TestDebugCursor();
         // Debug.Log($"mm.Add(this) = {mm.Add(this)}");
         // Debug.Log($"mm.AddFromMd(md) = {mm.AddFromMd(md)}");
-        if (mm.Add(md))
+        if (moveDataLoader.mm.Add(md))
         {
             if (recordManager != null)
             {
@@ -204,12 +208,9 @@ public class PieceCursor : MonoBehaviour
             piece.transform.SetParent(transform.parent);
             piece = null;
             Board.instance.Change();
+            moveDataList.Add(md);
         }
-    }
-
-    public void PutFromMd(MoveData md)
-    {
-
+        DebugLogMoveDataList(moveDataList);
     }
 
     public void Trash()
@@ -318,6 +319,29 @@ public class PieceCursor : MonoBehaviour
         }
 
         log += "==============================";
+
+        Debug.Log(log);
+    }
+    public void DebugLogMoveDataList(List<MoveData> list)
+    {
+        string log = "========== MoveData List ==========\n";
+
+        for (int i = 0; i < list.Count; i++)
+        {
+            MoveData md = list[i];
+
+            log += $"[{i}]\n";
+            log += $"  turn      : {md.turn}\n";
+            log += $"  player    : {md.player}\n";
+            log += $"  pieceType : {md.pieceType}\n";
+            log += $"  rotation  : {md.rotation}\n";
+            log += $"  flipped   : {md.flipped}\n";
+            log += $"  pos       : ({md.x}, {md.y})\n";
+            log += $"  touchdown : {md.touchdown}\n";
+            log += "--------------------------------\n";
+        }
+
+        log += "===================================";
 
         Debug.Log(log);
     }
