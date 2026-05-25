@@ -205,7 +205,7 @@ public class PieceCursor : MonoBehaviour
                 Debug.Log("Pゴマを追加しました");
                 mm.AddPDict(md, piece);
             }
-            piece.transform.SetParent(transform.parent);
+            piece.transform.SetParent(moveDataLoader.pieceContainer.transform);
             piece = null;
             Board.instance.Change();
             moveDataList.Add(md);

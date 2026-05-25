@@ -10,6 +10,8 @@ public class MoveDataLoader : MonoBehaviour
     [Header("Piece Prefabs (Inspector)")]
     [SerializeField]
     private List<PieceEntry> pieceEntries;
+    [Header("PieceContainer")]
+    public GameObject pieceContainer;
 
     private Dictionary<PieceType, GameObject> pieceDict;
     public MdMap mm;
@@ -58,7 +60,7 @@ public class MoveDataLoader : MonoBehaviour
         // 生成位置（MoveDataの中心）
         Vector3 pos = new Vector3(md.x, md.y, 0f);
 
-        GameObject obj = Instantiate(prefab, pos, Quaternion.identity);
+        GameObject obj = Instantiate(prefab, pos, Quaternion.identity, pieceContainer.transform);
 
         // =========================
         // rotation（基本回転）
@@ -92,6 +94,22 @@ public class MoveDataLoader : MonoBehaviour
         {
             LoadMoveData(moveList[i]);
         }
+    }
+
+    public void Reset()
+    {
+        // MdMapリセット
+        mm.Reset();
+        // Stockリセット
+        Board.instance.ResetStock();
+        // 古いContainer削除
+        if (pieceContainer != null)
+        {
+            Destroy(pieceContainer);
+        }
+
+        // 新しいEmpty生成
+        pieceContainer = new GameObject("PieceContainer");
     }
 
     public void TestLoad()

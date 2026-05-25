@@ -155,6 +155,21 @@ public class Board : MonoBehaviour
         Timer.ResetCounter();
     }
 
+    public void ChangeTo(bool t)
+    {
+        turn = t;
+        if (turn)
+        {
+            turnText.transform.localPosition = new Vector3(0, -18, 10);
+        }
+        else
+        {
+            turnText.transform.localPosition = new Vector3(0, 18, 10);
+        }
+
+        Timer.ResetCounter();
+    }
+
     public void Judge()
     {
         int r1 = Map.reach[false];
@@ -214,5 +229,13 @@ public class Board : MonoBehaviour
         {
             Debug.LogError($"Stockが見つかりません: player={player}, type={type}");
         }
+    }
+    public void ResetStock()
+    {
+        foreach (var pair in stockDict)
+        {
+            pair.Value.Reset();
+        }
+        ChangeTo(false);
     }
 }

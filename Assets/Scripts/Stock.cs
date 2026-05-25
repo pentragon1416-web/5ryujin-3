@@ -53,6 +53,37 @@ public class Stock : MonoBehaviour
             stockIcons.RemoveAt(stockIcons.Count - 1);
         }
     }
+    public void Reset()
+    {
+        // 既存アイコン削除
+        foreach (GameObject icon in stockIcons)
+        {
+            Destroy(icon);
+        }
+
+        stockIcons.Clear();
+
+        // 個数初期化
+        count = 5;
+
+        // 再生成
+        for (int i = 0; i < count; i++)
+        {
+            GameObject im = Instantiate(image, transform);
+
+            im.transform.localScale = new Vector3(15, 15, 1);
+            im.transform.localPosition = new Vector3((-2 + i) * imageDistance, 0, 0);
+
+            SortingGroup sg = im.GetComponent<SortingGroup>();
+
+            if (sg != null)
+            {
+                sg.sortingOrder = 10 - i;
+            }
+
+            stockIcons.Add(im);
+        }
+    }
 
     public void Select(PieceType type, bool turn)
     {

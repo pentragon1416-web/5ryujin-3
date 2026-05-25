@@ -14,7 +14,6 @@ public class MdMap
     public static Dictionary<(bool, int), (GameObject go, List<(float x, float y)> pos)> pdict;
     public static Dictionary<bool, int> reach;
     public PieceDatabase pieceDatabase;
-    public bool pdicAddable = false;
     public MdMap(PieceDatabase pieceDatabase)
     {
         this.pieceDatabase = pieceDatabase;
@@ -213,6 +212,15 @@ public class MdMap
 
         pdict[(player, num)] = (go, childTiles);
         DebugPrintPDict();
+    }
+    public void Reset()
+    {
+        this.pieceDatabase = pieceDatabase;
+        pdict = new Dictionary<(bool, int), (GameObject go, List<(float x, float y)> pos)>();
+        reach = new Dictionary<bool, int> { { false, 0 }, { true, 29 } };
+        this.magnetMap = new Dictionary<(float x, float y), (bool player, int num)>();
+        this.placedTiles = new Dictionary<(float x, float y), bool>();
+        dragonCount = new Dictionary<bool, int> { { false, 0 }, { true, 0 } };
     }
 
     public void DebugPrintPDict()
