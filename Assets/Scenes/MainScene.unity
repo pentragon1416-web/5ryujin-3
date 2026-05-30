@@ -288,7 +288,7 @@ MonoBehaviour:
   networkRunnerPrefab: {fileID: 2555866176037800614, guid: 6d13275d73330b94c87f28bbe24d7008, type: 3}
   networkRecordManagerPrefab:
     RawGuidValue: 8483355a5c81a1945965de01cfb6a9aa
-  pieceCursor: {fileID: 1289163783}
+  pieceCursor: {fileID: 0}
 --- !u!4 &111923080
 Transform:
   m_ObjectHideFlags: 0
@@ -910,7 +910,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1289163783}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PieceCursor, Assembly-CSharp
         m_MethodName: Put
         m_Mode: 1
@@ -1847,7 +1847,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1289163783}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PieceCursor, Assembly-CSharp
         m_MethodName: FlipButton
         m_Mode: 1
@@ -1915,7 +1915,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   image: {fileID: 763368193}
-  pc: {fileID: 1289163783}
+  pc: {fileID: 0}
   timelimit: {fileID: 1481496033}
 --- !u!114 &763368193
 MonoBehaviour:
@@ -2108,7 +2108,7 @@ PrefabInstance:
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1289163783}
+      objectReference: {fileID: 0}
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
@@ -3217,90 +3217,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7860267949319770680, guid: c6123ec838df6b047bb574953063354b, type: 3}
   m_PrefabInstance: {fileID: 1361033438}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1289163782
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1289163784}
-  - component: {fileID: 1289163783}
-  m_Layer: 0
-  m_Name: PieceCursor
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1289163783
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1289163782}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11997457d98981046a812c968b3f4614, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pieceType: 0
-  piecesList:
-  - type: 0
-    prefab: {fileID: 7429804384838392362, guid: e99efca67a3da4441b9158411bcb3f20, type: 3}
-  - type: 1
-    prefab: {fileID: 4916683864977085302, guid: deb681f294cef834dbf8e90c596ce4da, type: 3}
-  - type: 2
-    prefab: {fileID: 1839925252295122685, guid: 2f3cb09afa9fa4943a04b824ec35bf08, type: 3}
-  - type: 3
-    prefab: {fileID: 8117818306376423326, guid: 4dd46a7a23ef79c458bd7e082655a979, type: 3}
-  - type: 4
-    prefab: {fileID: 6535151251035351827, guid: 6d46307787813da41afe30b239b04cea, type: 3}
-  - type: 5
-    prefab: {fileID: 1236273358709883321, guid: 55bfc1b3e81517146905bb8a81c7d6a9, type: 3}
-  - type: 6
-    prefab: {fileID: 6535151251035351827, guid: 8e65b9b06505f2c43915c3ced47cc643, type: 3}
-  - type: 7
-    prefab: {fileID: 3592300335686093817, guid: 7ea6f7d16a3c8a34aa450eb37381293c, type: 3}
-  - type: 8
-    prefab: {fileID: 380541494030335059, guid: a19ff1b57e3467d44a4a51c539f1d90e, type: 3}
-  - type: 9
-    prefab: {fileID: 1926151044042920036, guid: 6f84214b60ba66b40a7607515acd9dac, type: 3}
-  - type: 10
-    prefab: {fileID: 5992867537122223747, guid: fe05501a4498f664fa315fb8a4b6a024, type: 3}
-  - type: 11
-    prefab: {fileID: 7747322136819803338, guid: 54871f65d75b7d348b4e816e561961a5, type: 3}
-  - type: 12
-    prefab: {fileID: 4044608685038442759, guid: 3bf9a967b038a9e439202b309f3179f9, type: 3}
-  childMagnets: []
-  childTiles: []
-  color1p:
-    serializedVersion: 2
-    rgba: 4278848506
-  color2p:
-    serializedVersion: 2
-    rgba: 4278190085
-  recordManager: {fileID: 1910646975}
-  pieceDatabase: {fileID: 11400000, guid: 511ead666f8708c4a82497675530c7e7, type: 2}
-  moveDataLoader: {fileID: 1385906649}
-  networkRecordManager: {fileID: 0}
---- !u!4 &1289163784
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1289163782}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1348726973
 GameObject:
   m_ObjectHideFlags: 0
@@ -3456,7 +3372,7 @@ PrefabInstance:
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1289163783}
+      objectReference: {fileID: 0}
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
@@ -4741,7 +4657,7 @@ MonoBehaviour:
   canvas: {fileID: 1639661655}
   turnText: {fileID: 226626661}
   tmp: {fileID: 1648269577}
-  pc: {fileID: 1289163782}
+  pc: {fileID: 0}
   images:
   - type: 0
     image: {fileID: 2788692057035301855, guid: d8bf2d114914a8148b9f2249aef72036, type: 3}
@@ -5749,7 +5665,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1289163783}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PieceCursor, Assembly-CSharp
         m_MethodName: RotateButton
         m_Mode: 1
@@ -6303,7 +6219,6 @@ SceneRoots:
   - {fileID: 1706076286}
   - {fileID: 1639661659}
   - {fileID: 1583074844}
-  - {fileID: 1289163784}
   - {fileID: 1762412620}
   - {fileID: 1132437435}
   - {fileID: 1910646976}
