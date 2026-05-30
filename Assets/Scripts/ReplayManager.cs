@@ -4,11 +4,17 @@ using UnityEngine.SceneManagement;
 
 public class ReplayManager : MonoBehaviour
 {
-    [Header("通常駒プレハブ（PieceCursor の pieces と同じ順番）")]
-    public List<GameObject> piecePrefabs = new List<GameObject>();
+    [Header("PieceType → Prefab対応表")]
+    [SerializeField] private List<PiecePrefabPair> piecePrefabs = new List<PiecePrefabPair>();
 
-    [Header("通常P駒の番号")]
-    public int normalPNumber = 11;
+    [System.Serializable]
+    public struct PiecePrefabPair
+    {
+        public PieceType type;
+        public GameObject prefab;
+    }
+
+    private Dictionary<PieceType, GameObject> prefabDict;
 
     [Header("タッチダウン用P駒")]
     public GameObject touchdownPrefab;
@@ -28,6 +34,21 @@ public class ReplayManager : MonoBehaviour
 
     void Start()
     {
+        // ★辞書化
+        prefabDict = new Dictionary<PieceType, GameObject>();
+
+        foreach (var p in piecePrefabs)
+        {
+            if (p.prefab != null)
+            {
+                prefabDict[p.type] = p.prefab;
+            }
+            else
+            {
+                Debug.LogWarning($"Prefab未設定: {p.type}");
+            }
+        }
+
         if (KifuReplayContext.HasKifu())
         {
             loadedKifu = KifuReplayContext.selectedKifu;
@@ -47,8 +68,6 @@ public class ReplayManager : MonoBehaviour
 
         currentMoveIndex++;
         RebuildReplay();
-
-        Debug.Log("Next：" + currentMoveIndex + "手目");
     }
 
     public void Prev()
@@ -58,16 +77,12 @@ public class ReplayManager : MonoBehaviour
 
         currentMoveIndex--;
         RebuildReplay();
-
-        Debug.Log("Prev：" + currentMoveIndex + "手目まで戻りました。");
     }
 
     public void ResetReplay()
     {
         currentMoveIndex = 0;
         ClearReplayObjects();
-
-        Debug.Log("棋譜再現をリセットしました。");
     }
 
     public void GoHome()
@@ -91,10 +106,7 @@ public class ReplayManager : MonoBehaviour
     {
         foreach (GameObject obj in replayObjects)
         {
-            if (obj != null)
-            {
-                Destroy(obj);
-            }
+            if (obj != null) Destroy(obj);
         }
 
         replayObjects.Clear();
@@ -105,6 +117,9 @@ public class ReplayManager : MonoBehaviour
     {
         GameObject prefab = null;
 
+        // =========================
+        // タッチダウン
+        // =========================
         if (move.touchdown)
         {
             if (startPObjects.ContainsKey(move.player))
@@ -124,46 +139,42 @@ public class ReplayManager : MonoBehaviour
         }
         else
         {
-            if (move.pieceType < 0 || move.pieceType >= piecePrefabs.Count)
+            PieceType type = move.pieceType;
+
+            if (!prefabDict.TryGetValue(type, out prefab))
             {
-                Debug.LogError("駒番号が不正です：" + move.pieceType);
+                Debug.LogError("未登録PieceType: " + type);
                 return;
             }
-
-            prefab = piecePrefabs[move.pieceType];
         }
 
         if (prefab == null)
         {
-            Debug.LogError("駒Prefabが設定されていません。");
+            Debug.LogError("Prefabがnullです");
             return;
         }
 
         Vector3 pos = new Vector3(move.x, move.y, -1f);
 
-        // 生成
         GameObject obj = Instantiate(prefab, pos, Quaternion.identity, replayParent);
 
-        // 回転＋反転（記録と完全一致させる）
         obj.transform.rotation = Quaternion.Euler(
             0,
             move.flipped ? 180 : 0,
             move.rotation
         );
 
-        // 色
         Color32 pieceColor = move.player ? color2p : color1p;
 
-        SpriteRenderer[] renderers = obj.GetComponentsInChildren<SpriteRenderer>();
-        foreach (SpriteRenderer sr in renderers)
+        foreach (var sr in obj.GetComponentsInChildren<SpriteRenderer>())
         {
             sr.color = pieceColor;
         }
 
         replayObjects.Add(obj);
 
-        // 通常P駒を記憶
-        if (!move.touchdown && move.pieceType == normalPNumber)
+        // P駒管理（必要なら残す）
+        if (!move.touchdown && move.pieceType == PieceType.P)
         {
             startPObjects[move.player] = obj;
         }
