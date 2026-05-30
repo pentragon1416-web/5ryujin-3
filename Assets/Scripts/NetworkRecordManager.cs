@@ -11,6 +11,8 @@ public class NetworkRecordManager : NetworkBehaviour
 
     [Networked]
     public int MoveCount { get; set; }
+    [Networked]
+    public bool Turn { get; set; }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void RpcAddMove(NetworkMoveData moveData)
@@ -25,6 +27,11 @@ public class NetworkRecordManager : NetworkBehaviour
         MoveCount++;
     }
 
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RpcChangeTurn()
+    {
+        Turn = !Turn;
+    }
     public MoveData GetMove(int index)
     {
         if (index < 0 || index >= MoveCount)
@@ -36,6 +43,12 @@ public class NetworkRecordManager : NetworkBehaviour
     public int GetMoveCount()
     {
         return MoveCount;
+    }
+
+
+    public bool GetTurn()
+    {
+        return Turn;
     }
 }
 

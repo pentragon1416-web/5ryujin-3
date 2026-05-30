@@ -196,20 +196,10 @@ public class PieceCursor : MonoBehaviour
                 );
                 recordManager.SaveRecord();
             }
-
-            if (stock != null)
-                Board.instance.DecrementStock(player, pieceType);
-            // pdictへの追加
-            if (pieceType == PieceType.P)
-            {
-                Debug.Log("Pゴマを追加しました");
-                mm.AddPDict(md, piece);
-            }
-            piece.transform.SetParent(moveDataLoader.pieceContainer.transform);
-            piece = null;
-            Board.instance.Change();
+            Trash();
             moveDataList.Add(md);
             moveDataLoader.LoadMoveData(md);
+            // networkRecordManager.RpcAddMove(NetworkMoveData.FromMoveData(md));
         }
         DebugLogMoveDataList(moveDataList);
     }

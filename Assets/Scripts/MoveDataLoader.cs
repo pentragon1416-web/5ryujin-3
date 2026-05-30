@@ -85,8 +85,13 @@ public class MoveDataLoader : MonoBehaviour
         {
             r.color = c;
         }
+        if (md.pieceType == PieceType.P)
+        {
+            mm.AddPDict(md, obj);
+        }
         // マップ登録
         mm.ApplyAdd(md);
+        Board.instance.Change();
     }
     public void LoadMoveDataList(List<MoveData> moveList)
     {
