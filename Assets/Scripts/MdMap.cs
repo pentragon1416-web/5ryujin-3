@@ -200,7 +200,16 @@ public class MdMap
     // ApplyAddの内部でnumを特定するためのプライベート補助関数
     private int GetMagnetNum(List<(float x, float y)> childMagnets, bool player, PieceType pieceType)
     {
-        if (pieceType == PieceType.P) return 0;
+        // ※AddPDictでPゴマのIDは内部発行される前提で、Pゴマの場合はdragonCountからIDを割り出す
+        if (pieceType == PieceType.P)
+        {
+            if (dragonCount[player] <= 0)
+            {
+                Debug.LogWarning("PゴマのID取得に失敗しました");
+                return 0;
+            }
+            return dragonCount[player] - 1;
+        }
 
         for (int i = 0; i < childMagnets.Count; i++)
         {
