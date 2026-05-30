@@ -10,7 +10,6 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 {
     [SerializeField] private NetworkRunner networkRunnerPrefab;
     [SerializeField] private NetworkPrefabRef networkRecordManagerPrefab;
-    [SerializeField] private PieceCursor pieceCursor;
 
     private NetworkRunner runner;
     private NetworkRecordManager networkRecordManager;
@@ -83,8 +82,6 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             yield break;
 
         isInitialized = true;
-
-        pieceCursor.SetNetworkRecordManager(networkRecordManager);
 
         Debug.Log("NetworkRecordManager 取得完了");
     }
