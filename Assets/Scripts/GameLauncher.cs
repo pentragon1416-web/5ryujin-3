@@ -9,7 +9,10 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField]
     private NetworkRunner networkRunnerPrefab;
     [SerializeField]
-    private NetworkPrefabRef playerAvatarPrefab;
+    private NetworkPrefabRef networkRecordManagerPrefab;
+
+    [SerializeField]
+    private PieceCursor pieceCursor;
 
     private async void Start()
     {
@@ -24,7 +27,12 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
     void INetworkRunnerCallbacks.OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
     void INetworkRunnerCallbacks.OnObjectEnterAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
-    void INetworkRunnerCallbacks.OnPlayerJoined(NetworkRunner runner, PlayerRef player) { }
+    void INetworkRunnerCallbacks.OnPlayerJoined(NetworkRunner runner, PlayerRef player)
+    {
+        var nrmObj = runner.Spawn(networkRecordManagerPrefab, Vector3.zero, Quaternion.identity, player);
+        var nrm = nrmObj.GetComponent<NetworkRecordManager>();
+        pieceCursor.SetNetworkRecordManager(nrm);
+    }
     void INetworkRunnerCallbacks.OnPlayerLeft(NetworkRunner runner, PlayerRef player) { }
     void INetworkRunnerCallbacks.OnInput(NetworkRunner runner, NetworkInput input) { }
     void INetworkRunnerCallbacks.OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }

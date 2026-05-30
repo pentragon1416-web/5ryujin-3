@@ -4,6 +4,7 @@ using UnityEngine;
 using Fusion;
 public class NetworkRecordManager : NetworkBehaviour
 {
+    public MoveDataLoader moveDataLoader;
     private const int MaxMoves = 512;
 
     [Networked, Capacity(MaxMoves)]
@@ -24,6 +25,7 @@ public class NetworkRecordManager : NetworkBehaviour
         }
 
         Moves.Set(MoveCount, moveData);
+        moveDataLoader.LoadMoveData(moveData.ToMoveData());
         MoveCount++;
     }
 
@@ -49,6 +51,11 @@ public class NetworkRecordManager : NetworkBehaviour
     public bool GetTurn()
     {
         return Turn;
+    }
+
+    public bool CanAdd(MoveData md)
+    {
+        return moveDataLoader.mm.CanAdd(md);
     }
 }
 
