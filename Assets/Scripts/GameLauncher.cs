@@ -1,52 +1,118 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Fusion;
 using Fusion.Sockets;
 using UnityEngine;
 
 public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 {
-    [SerializeField]
-    private NetworkRunner networkRunnerPrefab;
-    [SerializeField]
-    private NetworkPrefabRef networkRecordManagerPrefab;
+    [SerializeField] private NetworkRunner networkRunnerPrefab;
+    [SerializeField] private NetworkPrefabRef networkRecordManagerPrefab;
+    [SerializeField] private PieceCursor pieceCursor;
 
-    [SerializeField]
-    private PieceCursor pieceCursor;
+    private NetworkRunner runner;
+    private NetworkRecordManager networkRecordManager;
+
+    private bool isInitialized;
 
     private async void Start()
     {
-        var networkRunner = Instantiate(networkRunnerPrefab);
-        // GameLauncherを、NetworkRunnerのコールバック対象に追加する
-        networkRunner.AddCallbacks(this);
-        var result = await networkRunner.StartGame(new StartGameArgs
+        runner = Instantiate(networkRunnerPrefab);
+        runner.AddCallbacks(this);
+        runner.ProvideInput = true;
+
+        await runner.StartGame(new StartGameArgs
         {
-            GameMode = GameMode.Shared
+            GameMode = GameMode.Shared,
+            SessionName = "OnlineMatch",
+            PlayerCount = 2,
+            IsOpen = true,
+            IsVisible = true
         });
     }
 
-    void INetworkRunnerCallbacks.OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
-    void INetworkRunnerCallbacks.OnObjectEnterAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
-    void INetworkRunnerCallbacks.OnPlayerJoined(NetworkRunner runner, PlayerRef player)
+    private async void OnDestroy()
     {
-        var nrmObj = runner.Spawn(networkRecordManagerPrefab, Vector3.zero, Quaternion.identity, player);
-        var nrm = nrmObj.GetComponent<NetworkRecordManager>();
-        pieceCursor.SetNetworkRecordManager(nrm);
+        if (runner != null)
+        {
+            runner.RemoveCallbacks(this);
+            await runner.Shutdown();
+            Destroy(runner.gameObject);
+            runner = null;
+        }
     }
-    void INetworkRunnerCallbacks.OnPlayerLeft(NetworkRunner runner, PlayerRef player) { }
-    void INetworkRunnerCallbacks.OnInput(NetworkRunner runner, NetworkInput input) { }
-    void INetworkRunnerCallbacks.OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
-    void INetworkRunnerCallbacks.OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
-    void INetworkRunnerCallbacks.OnConnectedToServer(NetworkRunner runner) { }
-    void INetworkRunnerCallbacks.OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason) { }
-    void INetworkRunnerCallbacks.OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
-    void INetworkRunnerCallbacks.OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) { }
-    void INetworkRunnerCallbacks.OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { }
-    void INetworkRunnerCallbacks.OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList) { }
-    void INetworkRunnerCallbacks.OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
-    void INetworkRunnerCallbacks.OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
-    void INetworkRunnerCallbacks.OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data) { }
-    void INetworkRunnerCallbacks.OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress) { }
-    void INetworkRunnerCallbacks.OnSceneLoadDone(NetworkRunner runner) { }
-    void INetworkRunnerCallbacks.OnSceneLoadStart(NetworkRunner runner) { }
+
+    // ----------------------------
+    // Player Join
+    // ----------------------------
+    public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
+    {
+        // ホスト（SharedModeMasterClient）だけが生成する
+        if (runner.IsSharedModeMasterClient && networkRecordManager == null)
+        {
+            var obj = runner.Spawn(
+                networkRecordManagerPrefab,
+                Vector3.zero,
+                Quaternion.identity,
+                inputAuthority: null,
+                onBeforeSpawned: null,
+                flags: NetworkSpawnFlags.SharedModeStateAuthMasterClient
+            );
+
+            networkRecordManager = obj.GetComponent<NetworkRecordManager>();
+        }
+
+        // 全員：取得待ち
+        StartCoroutine(WaitForNetworkRecordManager());
+    }
+
+    // ----------------------------
+    // 重要：全員がここで同じものを取得する
+    // ----------------------------
+    private IEnumerator WaitForNetworkRecordManager()
+    {
+        while (networkRecordManager == null)
+        {
+            networkRecordManager = FindFirstObjectByType<NetworkRecordManager>();
+            yield return null;
+        }
+
+        if (isInitialized)
+            yield break;
+
+        isInitialized = true;
+
+        pieceCursor.SetNetworkRecordManager(networkRecordManager);
+
+        Debug.Log("NetworkRecordManager 取得完了");
+    }
+
+    public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) { }
+
+    public void OnInput(NetworkRunner runner, NetworkInput input) { }
+    public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
+
+    public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
+    public void OnConnectedToServer(NetworkRunner runner) { }
+    public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason) { }
+
+    public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
+    public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) { }
+
+    public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { }
+    public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList) { }
+
+    public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
+    public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
+
+    public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data) { }
+    public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress) { }
+
+    public void OnSceneLoadDone(NetworkRunner runner) { }
+    public void OnSceneLoadStart(NetworkRunner runner) { }
+
+    public void OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
+    public void OnObjectEnterAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
 }
