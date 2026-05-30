@@ -79,9 +79,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7314958956359979060}
-  - component: {fileID: 5932365380127661618}
+  - component: {fileID: 5348704228414167690}
   m_Layer: 0
-  m_Name: PieceCursor
+  m_Name: NetworkPieceCursor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -102,7 +102,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2970975297548279667}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5932365380127661618
+--- !u!114 &5348704228414167690
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -111,7 +111,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2381822352695434879}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11997457d98981046a812c968b3f4614, type: 3}
+  m_Script: {fileID: 11500000, guid: 9cf23b8b28611f7408403b08262d85a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   pieceType: 0
@@ -140,16 +140,16 @@ MonoBehaviour:
     prefab: {fileID: 5992867537122223747, guid: fe05501a4498f664fa315fb8a4b6a024, type: 3}
   - type: 11
     prefab: {fileID: 7747322136819803338, guid: 54871f65d75b7d348b4e816e561961a5, type: 3}
-  - type: 12
+  - type: 11
     prefab: {fileID: 4044608685038442759, guid: 3bf9a967b038a9e439202b309f3179f9, type: 3}
   childMagnets: []
   childTiles: []
   color1p:
     serializedVersion: 2
-    rgba: 4278848506
+    rgba: 4278190335
   color2p:
     serializedVersion: 2
-    rgba: 4278190085
+    rgba: 4278190080
   recordManager: {fileID: 0}
   pieceDatabase: {fileID: 11400000, guid: 511ead666f8708c4a82497675530c7e7, type: 2}
   moveDataLoader: {fileID: 8724172343972803574}

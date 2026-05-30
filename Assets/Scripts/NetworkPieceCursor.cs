@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class PieceCursor : MonoBehaviour
+public class NetworkPieceCursor : MonoBehaviour
 {
     public PieceType pieceType;
 
@@ -18,7 +18,7 @@ public class PieceCursor : MonoBehaviour
 
     private GameObject piece;
     private Stock stock;
-    public static PieceCursor instance;
+    public static NetworkPieceCursor instance;
 
     public List<Transform> childMagnets = new List<Transform>();
     public List<Transform> childTiles = new List<Transform>();
@@ -34,6 +34,8 @@ public class PieceCursor : MonoBehaviour
     public PieceDatabase pieceDatabase;
     [Header("MoveDataLoader")]
     public MoveDataLoader moveDataLoader;
+    [Header("NetworkRecordManager")]
+    public NetworkRecordManager networkRecordManager;
 
     private bool isOperatingUI = false;
     private List<MoveData> moveDataList = new();
@@ -59,6 +61,10 @@ public class PieceCursor : MonoBehaviour
             HandleTouch();
         else
             HandleMouse();
+    }
+    public void SetNetworkRecordManager(NetworkRecordManager nrm)
+    {
+        networkRecordManager = nrm;
     }
 
     private void HandleTouch()
@@ -181,7 +187,7 @@ public class PieceCursor : MonoBehaviour
         TestDebugCursor();
         // Debug.Log($"mm.Add(this) = {mm.Add(this)}");
         // Debug.Log($"mm.AddFromMd(md) = {mm.AddFromMd(md)}");
-        if (moveDataLoader.mm.CanAdd(md))
+        if (networkRecordManager.CanAdd(md))
         {
             if (recordManager != null)
             {
@@ -198,7 +204,8 @@ public class PieceCursor : MonoBehaviour
             }
             Trash();
             moveDataList.Add(md);
-            moveDataLoader.LoadMoveData(md);
+            // moveDataLoader.LoadMoveData(md);
+            networkRecordManager.RpcAddMove(NetworkMoveData.FromMoveData(md));
         }
         DebugLogMoveDataList(moveDataList);
     }

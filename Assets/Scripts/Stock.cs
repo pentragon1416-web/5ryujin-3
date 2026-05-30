@@ -89,8 +89,13 @@ public class Stock : MonoBehaviour
     {
         if (turn != Board.turn) return;
         if (count <= 0) return;
-        if (PieceCursor.instance == null) return;
-
-        PieceCursor.instance.Select(type, this);
+        if (PieceCursor.instance != null)
+        {
+            PieceCursor.instance.Select(type, this);
+        }
+        if (NetworkPieceCursor.instance != null)
+        {
+            NetworkPieceCursor.instance.Select(type, this);
+        }
     }
 }
