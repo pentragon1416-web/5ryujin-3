@@ -4,45 +4,79 @@ using UnityEngine;
 using Fusion;
 public class NetworkRecordManager : NetworkBehaviour
 {
-    [SerializeField] private RecordManager recordManager;
-    public void SetRecordManager(RecordManager rm)
+    private const int MaxMoves = 512;
+
+    [Networked, Capacity(MaxMoves)]
+    public NetworkArray<NetworkMoveData> Moves => default;
+
+    [Networked]
+    public int MoveCount { get; set; }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RpcAddMove(NetworkMoveData moveData)
     {
-        recordManager = rm;
-    }
-    public void SendAddMove(
-        PieceType pieceType,
-        int rotation,
-        bool flipped,
-        int x,
-        int y,
-        bool player,
-        bool touchdown
-    )
-    {
-        RpcAddMove((int)pieceType, rotation, flipped, x, y, player, touchdown);
+        if (MoveCount >= MaxMoves)
+        {
+            Debug.LogWarning("Move history is full.");
+            return;
+        }
+
+        Moves.Set(MoveCount, moveData);
+        MoveCount++;
     }
 
-    [Rpc(RpcSources.All, RpcTargets.All)]
-    private void RpcAddMove(
-        int pieceType,
-        int rotation,
-        bool flipped,
-        int x,
-        int y,
-        bool player,
-        bool touchdown
-    )
+    public MoveData GetMove(int index)
     {
-        recordManager.AddMove(
-            (PieceType)pieceType,
-            rotation,
-            flipped,
-            x,
-            y,
-            player,
-            touchdown
-        );
+        if (index < 0 || index >= MoveCount)
+            return null;
 
-        recordManager.SaveRecord();
+        return Moves.Get(index).ToMoveData();
+    }
+
+    public int GetMoveCount()
+    {
+        return MoveCount;
+    }
+}
+
+public struct NetworkMoveData : INetworkStruct
+{
+    public int turn;
+    public NetworkBool player;
+    public PieceType pieceType;
+    public int rotation;
+    public NetworkBool flipped;
+    public int x;
+    public int y;
+    public NetworkBool touchdown;
+
+    public static NetworkMoveData FromMoveData(MoveData data)
+    {
+        return new NetworkMoveData
+        {
+            turn = data.turn,
+            player = data.player,
+            pieceType = data.pieceType,
+            rotation = data.rotation,
+            flipped = data.flipped,
+            x = data.x,
+            y = data.y,
+            touchdown = data.touchdown
+        };
+    }
+
+    public MoveData ToMoveData()
+    {
+        return new MoveData
+        {
+            turn = turn,
+            player = player,
+            pieceType = pieceType,
+            rotation = rotation,
+            flipped = flipped,
+            x = x,
+            y = y,
+            touchdown = touchdown
+        };
     }
 }
