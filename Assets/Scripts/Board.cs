@@ -138,6 +138,10 @@ public class Board : MonoBehaviour
             Change();
         }
     }
+    public void SetPieceCursor(NetworkPieceCursor npc)
+    {
+        pc = npc.gameObject;
+    }
 
     public void Change()
     {
@@ -172,8 +176,8 @@ public class Board : MonoBehaviour
 
     public void Judge()
     {
-        int r1 = Map.reach[false];
-        int r2 = 29 - Map.reach[true];
+        int r1 = MdMap.reach[false];
+        int r2 = 29 - MdMap.reach[true];
 
         if (r1 == r2)
         {

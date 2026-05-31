@@ -4,33 +4,33 @@ using UnityEngine;
 
 public class GameUIForNetwork : MonoBehaviour
 {
-    [SerializeField]
     private NetworkController networkController;
 
     public void SetNetworkController(NetworkController controller)
     {
         networkController = controller;
+
     }
 
     public void PutButton()
     {
         if (networkController == null) return;
 
-        networkController.RpcPutButton();
+        networkController.PutButton();
     }
 
     public void RotateButton()
     {
         if (networkController == null) return;
 
-        networkController.RpcRotateButton();
+        networkController.RotateButton();
     }
 
     public void FlipButton()
     {
         if (networkController == null) return;
 
-        networkController.RpcFlipButton();
+        networkController.FlipButton();
     }
 
     public void GiveUpButton(int playerIndex)

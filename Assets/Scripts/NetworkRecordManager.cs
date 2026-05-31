@@ -4,6 +4,7 @@ using UnityEngine;
 using Fusion;
 public class NetworkRecordManager : NetworkBehaviour
 {
+    public NetworkPieceCursor networkPieceCursor;
     public MoveDataLoader moveDataLoader;
     private const int MaxMoves = 512;
 

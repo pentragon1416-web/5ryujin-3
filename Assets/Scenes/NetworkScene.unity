@@ -362,6 +362,50 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7860267949319770680, guid: c6123ec838df6b047bb574953063354b, type: 3}
   m_PrefabInstance: {fileID: 47388787}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &72266326
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 72266328}
+  - component: {fileID: 72266327}
+  m_Layer: 0
+  m_Name: GameUIForNetwork
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &72266327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 72266326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e8b963d8a4eb1b4cbf1ea37fc53f421, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &72266328
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 72266326}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 30.883823, y: 16.873075, z: -0.12753516}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &114508620
 GameObject:
   m_ObjectHideFlags: 0
@@ -461,18 +505,18 @@ PrefabInstance:
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1173701267}
+      objectReference: {fileID: 72266327}
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Skip
+      value: TimerSkipButton
       objectReference: {fileID: 0}
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: Timer, Assembly-CSharp
+      value: GameUIForNetwork, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
@@ -2098,8 +2142,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: PieceCursor, Assembly-CSharp
+      - m_Target: {fileID: 72266327}
+        m_TargetAssemblyTypeName: GameUIForNetwork, Assembly-CSharp
         m_MethodName: FlipButton
         m_Mode: 1
         m_Arguments:
@@ -2522,18 +2566,18 @@ PrefabInstance:
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1173701267}
+      objectReference: {fileID: 72266327}
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Skip
+      value: TimerSkipButton
       objectReference: {fileID: 0}
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: Timer, Assembly-CSharp
+      value: GameUIForNetwork, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
@@ -2883,8 +2927,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: PieceCursor, Assembly-CSharp
+      - m_Target: {fileID: 72266327}
+        m_TargetAssemblyTypeName: GameUIForNetwork, Assembly-CSharp
         m_MethodName: RotateButton
         m_Mode: 1
         m_Arguments:
@@ -3237,6 +3281,10 @@ MonoBehaviour:
   networkRunnerPrefab: {fileID: 2555866176037800614, guid: 6d13275d73330b94c87f28bbe24d7008, type: 3}
   networkRecordManagerPrefab:
     RawGuidValue: 8483355a5c81a1945965de01cfb6a9aa
+  networkControllerPrefab:
+    RawGuidValue: 2188e104d32a3c848bc7f592a469c8fa
+  gameUIForNetwork: {fileID: 72266327}
+  timer: {fileID: 1173701267}
 --- !u!4 &1312663102
 Transform:
   m_ObjectHideFlags: 0
@@ -4570,18 +4618,18 @@ PrefabInstance:
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 114508621}
+      objectReference: {fileID: 72266327}
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Giveup
+      value: GiveUpButton
       objectReference: {fileID: 0}
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: Board, Assembly-CSharp
+      value: GameUIForNetwork, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
@@ -5779,18 +5827,18 @@ PrefabInstance:
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 114508621}
+      objectReference: {fileID: 72266327}
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Giveup
+      value: GiveUpButton
       objectReference: {fileID: 0}
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: Board, Assembly-CSharp
+      value: GameUIForNetwork, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
@@ -5949,7 +5997,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: PutButton
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
@@ -6160,9 +6208,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: PieceCursor, Assembly-CSharp
-        m_MethodName: Put
+      - m_Target: {fileID: 72266327}
+        m_TargetAssemblyTypeName: GameUIForNetwork, Assembly-CSharp
+        m_MethodName: PutButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6226,3 +6274,4 @@ SceneRoots:
   - {fileID: 1256167774}
   - {fileID: 1777389081}
   - {fileID: 1312663102}
+  - {fileID: 72266328}

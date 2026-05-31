@@ -5,23 +5,29 @@ using Fusion;
 
 public class NetworkController : NetworkBehaviour
 {
-    public NetworkPieceCursor networkPieceCursor;
-    public Timer timer;
+    private NetworkPieceCursor networkPieceCursor;
+    private Timer timer;
+    public void SetNetworkPieceCursor(NetworkPieceCursor cursor)
+    {
+        networkPieceCursor = cursor;
+    }
 
-    [Rpc(RpcSources.All, RpcTargets.All)]
-    public void RpcPutButton()
+    public void SetTimer(Timer timer)
+    {
+        this.timer = timer;
+    }
+
+    public void PutButton()
     {
         networkPieceCursor.PutButton();
     }
 
-    [Rpc(RpcSources.All, RpcTargets.All)]
-    public void RpcRotateButton()
+    public void RotateButton()
     {
         networkPieceCursor.RotateButton();
     }
 
-    [Rpc(RpcSources.All, RpcTargets.All)]
-    public void RpcFlipButton()
+    public void FlipButton()
     {
         networkPieceCursor.FlipButton();
     }

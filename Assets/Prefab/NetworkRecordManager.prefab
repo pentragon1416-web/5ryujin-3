@@ -48,6 +48,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69f1a95d06bc1784e999905286ed89ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  networkPieceCursor: {fileID: 5348704228414167690}
   moveDataLoader: {fileID: 8724172343972803574}
   _MoveCount: 234
   _Turn: 0

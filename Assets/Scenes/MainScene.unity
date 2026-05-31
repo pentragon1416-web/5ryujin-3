@@ -862,9 +862,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1624130203}
         m_TargetAssemblyTypeName: PieceCursor, Assembly-CSharp
-        m_MethodName: Put
+        m_MethodName: PutButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1799,7 +1799,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1624130203}
         m_TargetAssemblyTypeName: PieceCursor, Assembly-CSharp
         m_MethodName: FlipButton
         m_Mode: 1
@@ -5700,7 +5700,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1624130203}
         m_TargetAssemblyTypeName: PieceCursor, Assembly-CSharp
         m_MethodName: RotateButton
         m_Mode: 1

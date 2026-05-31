@@ -10,10 +10,15 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 {
     [SerializeField] private NetworkRunner networkRunnerPrefab;
     [SerializeField] private NetworkPrefabRef networkRecordManagerPrefab;
+    [SerializeField] private NetworkPrefabRef networkControllerPrefab;
+
+    [Header("ローカルセッティング用")]
+    [SerializeField] private GameUIForNetwork gameUIForNetwork;
+    [SerializeField] private Timer timer;
 
     private NetworkRunner runner;
     private NetworkRecordManager networkRecordManager;
-
+    private NetworkController networkController;
     private bool isInitialized;
 
     private async void Start()
@@ -60,6 +65,17 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
                 flags: NetworkSpawnFlags.SharedModeStateAuthMasterClient
             );
 
+            var controllerObj = runner.Spawn(
+                networkControllerPrefab,
+                Vector3.zero,
+                Quaternion.identity,
+                inputAuthority: null,
+                onBeforeSpawned: null,
+                flags: NetworkSpawnFlags.SharedModeStateAuthMasterClient
+            );
+
+            networkController = controllerObj.GetComponent<NetworkController>();
+
             networkRecordManager = obj.GetComponent<NetworkRecordManager>();
         }
 
@@ -77,6 +93,18 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             networkRecordManager = FindFirstObjectByType<NetworkRecordManager>();
             yield return null;
         }
+        while (networkController == null)
+        {
+            networkController = FindFirstObjectByType<NetworkController>();
+            yield return null;
+        }
+        // Debug.Log(networkRecordManager);
+        // Debug.Log(networkController);
+        // Debug.Log(gameUIForNetwork);
+        // Debug.Log(timer);
+        networkController.SetNetworkPieceCursor(networkRecordManager.networkPieceCursor);
+        networkController.SetTimer(timer);
+        gameUIForNetwork.SetNetworkController(networkController);
 
         if (isInitialized)
             yield break;
