@@ -102,8 +102,10 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         // Debug.Log(networkController);
         // Debug.Log(gameUIForNetwork);
         // Debug.Log(timer);
+        Board.instance.SetPieceCursor(networkRecordManager.networkPieceCursor);
         networkController.SetNetworkPieceCursor(networkRecordManager.networkPieceCursor);
         networkController.SetTimer(timer);
+        networkController.RpcResetCounter();
         gameUIForNetwork.SetNetworkController(networkController);
 
         if (isInitialized)

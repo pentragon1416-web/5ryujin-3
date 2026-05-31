@@ -43,4 +43,10 @@ public class NetworkController : NetworkBehaviour
     {
         timer.Skip(p);
     }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void RpcResetCounter()
+    {
+        Timer.ResetCounter();
+    }
 }
