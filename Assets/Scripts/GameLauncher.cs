@@ -104,6 +104,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     // ----------------------------
     private IEnumerator WaitForNetworkRecordManager()
     {
+        networkRecordManager.networkPieceCursor.enabled = false;
         // shouldStartGameがtrueになるまで待機
         while (!shouldStartGame)
         {
@@ -136,6 +137,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         networkController.SetTimer(timer);
         networkController.RpcResetCounter();
         gameUIForNetwork.SetNetworkController(networkController);
+        networkRecordManager.networkPieceCursor.enabled = false;
         InitializeGame();
     }
 
