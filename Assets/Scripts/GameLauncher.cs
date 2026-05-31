@@ -20,6 +20,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     private NetworkRecordManager networkRecordManager;
     private NetworkController networkController;
     private bool isInitialized;
+    private bool shouldStartGame = false;
 
     private async void Start()
     {
@@ -53,6 +54,8 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     // ----------------------------
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
+        Debug.Log($"Player joined. Active players: {runner.ActivePlayers.Count()}");
+
         // ホスト（SharedModeMasterClient）だけが生成する
         if (runner.IsSharedModeMasterClient && networkRecordManager == null)
         {
@@ -79,8 +82,12 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             networkRecordManager = obj.GetComponent<NetworkRecordManager>();
         }
 
-        // 全員：取得待ち
-        StartCoroutine(WaitForNetworkRecordManager());
+        // 二人目が来たときにbool値をtrueにしてループ解除
+        if (runner.ActivePlayers.Count() == 2 && !shouldStartGame)
+        {
+            shouldStartGame = true;
+            StartCoroutine(WaitForNetworkRecordManager());
+        }
     }
 
     // ----------------------------
@@ -88,6 +95,14 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     // ----------------------------
     private IEnumerator WaitForNetworkRecordManager()
     {
+        // shouldStartGameがtrueになるまで待機
+        while (!shouldStartGame)
+        {
+            Timer.ResetCounter();
+            yield return null;
+        }
+
+        // ネットワークオブジェクトの取得
         while (networkRecordManager == null)
         {
             networkRecordManager = FindFirstObjectByType<NetworkRecordManager>();
@@ -98,22 +113,20 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             networkController = FindFirstObjectByType<NetworkController>();
             yield return null;
         }
-        // Debug.Log(networkRecordManager);
-        // Debug.Log(networkController);
-        // Debug.Log(gameUIForNetwork);
-        // Debug.Log(timer);
-        Board.instance.SetPieceCursor(networkRecordManager.networkPieceCursor);
-        networkController.SetNetworkPieceCursor(networkRecordManager.networkPieceCursor);
-        networkController.SetTimer(timer);
-        networkController.RpcResetCounter();
-        gameUIForNetwork.SetNetworkController(networkController);
 
         if (isInitialized)
             yield break;
 
         isInitialized = true;
 
-        Debug.Log("NetworkRecordManager 取得完了");
+        Debug.Log("Game initialized with 2 players. Starting game...");
+
+        // ゲーム初期化処理
+        Board.instance.SetPieceCursor(networkRecordManager.networkPieceCursor);
+        networkController.SetNetworkPieceCursor(networkRecordManager.networkPieceCursor);
+        networkController.SetTimer(timer);
+        networkController.RpcResetCounter();
+        gameUIForNetwork.SetNetworkController(networkController);
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) { }
