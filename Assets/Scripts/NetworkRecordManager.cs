@@ -4,7 +4,6 @@ using UnityEngine;
 using Fusion;
 public class NetworkRecordManager : NetworkBehaviour
 {
-    public NetworkPieceCursor networkPieceCursor;
     public MoveDataLoader moveDataLoader;
     private const int MaxMoves = 512;
 
@@ -42,7 +41,6 @@ public class NetworkRecordManager : NetworkBehaviour
     {
         Turn = !Turn;
     }
-
     public MoveData GetMove(int index)
     {
         if (index < 0 || index >= MoveCount)

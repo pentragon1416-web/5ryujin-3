@@ -32,14 +32,12 @@ public class NetworkPieceCursor : MonoBehaviour
     public RecordManager recordManager;
     [Header("PieceDatabase")]
     public PieceDatabase pieceDatabase;
-    [Header("MoveDataLoader")]
-    public MoveDataLoader moveDataLoader;
     [Header("NetworkRecordManager")]
-    public NetworkRecordManager networkRecordManager;
+    private NetworkRecordManager networkRecordManager;
 
     private bool isOperatingUI = false;
     private List<MoveData> moveDataList = new();
-    private bool myTurn = false;
+    public bool myTurn = false;
 
     void OnEnable()
     {
@@ -58,7 +56,8 @@ public class NetworkPieceCursor : MonoBehaviour
 
     void Update()
     {
-        if (!myTurn == Board.turn) return;
+        // if (myTurn != Board.turn) return;
+        Debug.Log($"NetworkPieceCursor Update: myTurn={myTurn}, Board.turn={Board.turn}");
         if (Input.touchCount > 0)
             HandleTouch();
         else
@@ -210,7 +209,6 @@ public class NetworkPieceCursor : MonoBehaviour
             }
             Trash();
             moveDataList.Add(md);
-            // moveDataLoader.LoadMoveData(md);
             networkRecordManager.RpcAddMove(NetworkMoveData.FromMoveData(md));
         }
         DebugLogMoveDataList(moveDataList);

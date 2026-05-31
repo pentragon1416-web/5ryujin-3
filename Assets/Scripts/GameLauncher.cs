@@ -13,6 +13,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] private NetworkPrefabRef networkControllerPrefab;
 
     [Header("ローカルセッティング用")]
+    [SerializeField] private NetworkPieceCursor networkPieceCursor;
     [SerializeField] private GameUIForNetwork gameUIForNetwork;
     [SerializeField] private Timer timer;
     [Header("下側から")]
@@ -90,6 +91,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             networkController = controllerObj.GetComponent<NetworkController>();
 
             networkRecordManager = obj.GetComponent<NetworkRecordManager>();
+            networkPieceCursor.enabled = false;
         }
         // 二人目が来たときにbool値をtrueにしてループ解除
         if (runner.ActivePlayers.Count() == 2)
@@ -104,14 +106,12 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     // ----------------------------
     private IEnumerator WaitForNetworkRecordManager()
     {
-        networkRecordManager.networkPieceCursor.enabled = false;
         // shouldStartGameがtrueになるまで待機
         while (!shouldStartGame)
         {
             Timer.ResetCounter();
             yield return null;
         }
-
         // ネットワークオブジェクトの取得
         while (networkRecordManager == null)
         {
@@ -132,12 +132,13 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         Debug.Log("Game initialized with 2 players. Starting game...");
 
         // ゲーム初期化処理
-        Board.instance.SetPieceCursor(networkRecordManager.networkPieceCursor);
-        networkController.SetNetworkPieceCursor(networkRecordManager.networkPieceCursor);
+        networkPieceCursor.SetNetworkRecordManager(networkRecordManager);
+        Board.instance.SetPieceCursor(networkPieceCursor);
+        networkController.SetNetworkPieceCursor(networkPieceCursor);
         networkController.SetTimer(timer);
         networkController.RpcResetCounter();
         gameUIForNetwork.SetNetworkController(networkController);
-        networkRecordManager.networkPieceCursor.enabled = false;
+        networkPieceCursor.enabled = true;
         InitializeGame();
     }
 
@@ -148,14 +149,14 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             UpperTD.SetActive(false);
             UpperGU.SetActive(false);
             UpperPass.SetActive(false);
-            NetworkPieceCursor.instance.SetMyTurn(false);
+            networkPieceCursor.SetMyTurn(false);
         }
         else
         {
             LowerTD.SetActive(false);
             LowerGU.SetActive(false);
             LowerPass.SetActive(false);
-            NetworkPieceCursor.instance.SetMyTurn(true);
+            networkPieceCursor.SetMyTurn(true);
         }
     }
 
