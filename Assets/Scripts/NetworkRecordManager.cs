@@ -14,6 +14,13 @@ public class NetworkRecordManager : NetworkBehaviour
     public int MoveCount { get; set; }
     [Networked]
     public bool Turn { get; set; }
+    public override void Spawned()
+    {
+        if (Object.HasStateAuthority)
+        {
+            MoveCount = 0;
+        }
+    }
 
     [Rpc(RpcSources.All, RpcTargets.All)]
     public void RpcAddMove(NetworkMoveData moveData)

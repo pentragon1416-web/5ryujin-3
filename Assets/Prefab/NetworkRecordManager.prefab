@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveDataLoader: {fileID: 8724172343972803574}
-  _MoveCount: 0
+  _MoveCount: 234
   _Turn: 0
 --- !u!114 &8771993254955618784
 MonoBehaviour:
