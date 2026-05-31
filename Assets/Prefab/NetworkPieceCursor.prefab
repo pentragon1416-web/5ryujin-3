@@ -76,10 +76,10 @@ MonoBehaviour:
   childTiles: []
   color1p:
     serializedVersion: 2
-    rgba: 0
+    rgba: 4278190335
   color2p:
     serializedVersion: 2
-    rgba: 0
+    rgba: 4278190080
   recordManager: {fileID: 0}
   pieceDatabase: {fileID: 11400000, guid: 511ead666f8708c4a82497675530c7e7, type: 2}
   myTurn: 0
