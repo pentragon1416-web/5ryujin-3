@@ -15,12 +15,21 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     [Header("ローカルセッティング用")]
     [SerializeField] private GameUIForNetwork gameUIForNetwork;
     [SerializeField] private Timer timer;
+    [Header("下側から")]
+    [SerializeField] private GameObject LowerTD;
+    [SerializeField] private GameObject LowerGU;
+    [SerializeField] private GameObject LowerPass;
+    [Header("上側から")]
+    [SerializeField] private GameObject UpperTD;
+    [SerializeField] private GameObject UpperGU;
+    [SerializeField] private GameObject UpperPass;
 
     private NetworkRunner runner;
     private NetworkRecordManager networkRecordManager;
     private NetworkController networkController;
     private bool isInitialized;
     private bool shouldStartGame = false;
+    private bool isHost = false;
 
     private async void Start()
     {
@@ -59,6 +68,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         // ホスト（SharedModeMasterClient）だけが生成する
         if (runner.IsSharedModeMasterClient && networkRecordManager == null)
         {
+            isHost = true;
             var obj = runner.Spawn(
                 networkRecordManagerPrefab,
                 Vector3.zero,
@@ -81,13 +91,12 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
             networkRecordManager = obj.GetComponent<NetworkRecordManager>();
         }
-
         // 二人目が来たときにbool値をtrueにしてループ解除
-        if (runner.ActivePlayers.Count() == 2 && !shouldStartGame)
+        if (runner.ActivePlayers.Count() == 2)
         {
             shouldStartGame = true;
-            StartCoroutine(WaitForNetworkRecordManager());
         }
+        StartCoroutine(WaitForNetworkRecordManager());
     }
 
     // ----------------------------
@@ -127,6 +136,25 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         networkController.SetTimer(timer);
         networkController.RpcResetCounter();
         gameUIForNetwork.SetNetworkController(networkController);
+        InitializeGame();
+    }
+
+    private void InitializeGame()
+    {
+        if (isHost)
+        {
+            UpperTD.SetActive(false);
+            UpperGU.SetActive(false);
+            UpperPass.SetActive(false);
+            NetworkPieceCursor.instance.SetMyTurn(false);
+        }
+        else
+        {
+            LowerTD.SetActive(false);
+            LowerGU.SetActive(false);
+            LowerPass.SetActive(false);
+            NetworkPieceCursor.instance.SetMyTurn(true);
+        }
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) { }

@@ -42,6 +42,7 @@ public class NetworkRecordManager : NetworkBehaviour
     {
         Turn = !Turn;
     }
+
     public MoveData GetMove(int index)
     {
         if (index < 0 || index >= MoveCount)

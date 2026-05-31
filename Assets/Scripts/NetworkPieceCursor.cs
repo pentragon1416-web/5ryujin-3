@@ -39,8 +39,9 @@ public class NetworkPieceCursor : MonoBehaviour
 
     private bool isOperatingUI = false;
     private List<MoveData> moveDataList = new();
+    private bool myTurn = false;
 
-    void Start()
+    void OnEnable()
     {
         instance = this;
 
@@ -57,6 +58,7 @@ public class NetworkPieceCursor : MonoBehaviour
 
     void Update()
     {
+        if (!myTurn == Board.turn) return;
         if (Input.touchCount > 0)
             HandleTouch();
         else
@@ -65,6 +67,10 @@ public class NetworkPieceCursor : MonoBehaviour
     public void SetNetworkRecordManager(NetworkRecordManager nrm)
     {
         networkRecordManager = nrm;
+    }
+    public void SetMyTurn(bool isMyTurn)
+    {
+        myTurn = isMyTurn;
     }
 
     private void HandleTouch()
