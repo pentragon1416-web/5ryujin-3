@@ -16,6 +16,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] private NetworkPieceCursor networkPieceCursor;
     [SerializeField] private GameUIForNetwork gameUIForNetwork;
     [SerializeField] private Timer timer;
+    [SerializeField] private MessageController messageController;
     [Header("下側から")]
     [SerializeField] private GameObject LowerTD;
     [SerializeField] private GameObject LowerGU;
@@ -46,6 +47,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             IsOpen = true,
             IsVisible = true
         });
+        messageController.ShowMessageWithGoTitleButton("Matching...");
     }
 
     private async void OnDestroy()
@@ -136,6 +138,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         Board.instance.SetPieceCursor(networkPieceCursor);
         networkController.SetNetworkPieceCursor(networkPieceCursor);
         networkController.SetTimer(timer);
+        networkController.SetMessageController(messageController);
         networkController.RpcResetCounter();
         gameUIForNetwork.SetNetworkController(networkController);
         networkPieceCursor.enabled = true;
@@ -150,6 +153,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             UpperGU.SetActive(false);
             UpperPass.SetActive(false);
             networkPieceCursor.SetMyTurn(false);
+            messageController.ShowMessage("You are Lower.");
         }
         else
         {
@@ -157,10 +161,15 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             LowerGU.SetActive(false);
             LowerPass.SetActive(false);
             networkPieceCursor.SetMyTurn(true);
+            messageController.ShowMessage("You are Upper.");
         }
+        messageController.HideMessageAfterDelay(1f);
     }
 
-    public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) { }
+    public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
+    {
+        messageController.ShowMessageWithGoTitleButton("Opponent left the game.");
+    }
 
     public void OnInput(NetworkRunner runner, NetworkInput input) { }
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }

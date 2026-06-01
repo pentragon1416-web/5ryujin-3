@@ -57,7 +57,6 @@ public class NetworkPieceCursor : MonoBehaviour
     void Update()
     {
         if (myTurn != Board.turn) return;
-        Debug.Log($"NetworkPieceCursor Update: myTurn={myTurn}, Board.turn={Board.turn}");
         if (Input.touchCount > 0)
             HandleTouch();
         else

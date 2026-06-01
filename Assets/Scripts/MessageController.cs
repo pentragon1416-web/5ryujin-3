@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class MessageController : MonoBehaviour
 {
@@ -30,5 +31,16 @@ public class MessageController : MonoBehaviour
         messagePanelObj.SetActive(false);
         messageTextObj.SetActive(false);
         goTitleButtonObj.SetActive(false);
+    }
+
+    public void HideMessageAfterDelay(float delay)
+    {
+        StartCoroutine(HideMessageAfterDelayCoroutine(delay));
+    }
+
+    private IEnumerator HideMessageAfterDelayCoroutine(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        HideMessage();
     }
 }
