@@ -445,6 +445,7 @@ MonoBehaviour:
   canvas: {fileID: 1848038539}
   turnText: {fileID: 1360828196}
   tmp: {fileID: 473001304}
+  goHomeButton: {fileID: 625095994}
   pc: {fileID: 0}
   images:
   - type: 0
@@ -1923,7 +1924,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -228}
+  m_AnchoredPosition: {x: 0, y: -277}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &625095996

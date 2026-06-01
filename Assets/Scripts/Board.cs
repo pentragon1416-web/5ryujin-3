@@ -12,6 +12,7 @@ public class Board : MonoBehaviour
     [SerializeField] GameObject canvas;
     [SerializeField] GameObject turnText;
     [SerializeField] TextMeshProUGUI tmp;
+    [SerializeField] GameObject goHomeButton;
 
     public static bool turn { get; private set; } // false = 1P
     public static Board instance;
@@ -203,6 +204,7 @@ public class Board : MonoBehaviour
         {
             tmp.text = "Draw";
         }
+        goHomeButton.SetActive(true);
     }
 
     public void Giveup(int i)
