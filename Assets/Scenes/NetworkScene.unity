@@ -730,7 +730,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 130, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &188145760
 MonoBehaviour:
@@ -3780,10 +3780,10 @@ MonoBehaviour:
   gameUIForNetwork: {fileID: 72266327}
   timer: {fileID: 1173701267}
   messageController: {fileID: 1862112259}
-  LowerTD: {fileID: 563368368}
+  LowerTD: {fileID: 2083665525}
   LowerGU: {fileID: 788128680}
   LowerPass: {fileID: 1048338671}
-  UpperTD: {fileID: 2083665525}
+  UpperTD: {fileID: 563368368}
   UpperGU: {fileID: 1578302350}
   UpperPass: {fileID: 2102285698}
 --- !u!4 &1312663102

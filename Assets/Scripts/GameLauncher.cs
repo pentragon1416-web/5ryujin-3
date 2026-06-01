@@ -153,7 +153,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             UpperGU.SetActive(false);
             UpperPass.SetActive(false);
             networkPieceCursor.SetMyTurn(false);
-            messageController.ShowMessage("You are Lower.");
+            messageController.ShowMessage("Lower!");
         }
         else
         {
@@ -161,14 +161,14 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             LowerGU.SetActive(false);
             LowerPass.SetActive(false);
             networkPieceCursor.SetMyTurn(true);
-            messageController.ShowMessage("You are Upper.");
+            messageController.ShowMessage("Upper!");
         }
         messageController.HideMessageAfterDelay(1f);
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
-        messageController.ShowMessageWithGoTitleButton("Opponent left the game.");
+        messageController.ShowMessageWithGoTitleButton("left...");
     }
 
     public void OnInput(NetworkRunner runner, NetworkInput input) { }
