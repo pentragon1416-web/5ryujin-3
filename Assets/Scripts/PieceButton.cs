@@ -47,7 +47,7 @@ public class PieceButton : MonoBehaviour
             }
             else
             {
-                Debug.LogError("PieceCursor.instance が見つかりません。");
+                // Debug.LogError("PieceCursor.instance が見つかりません。");
             }
             if (NetworkPieceCursor.instance != null)
             {

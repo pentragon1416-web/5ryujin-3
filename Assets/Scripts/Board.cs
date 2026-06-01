@@ -231,7 +231,7 @@ public class Board : MonoBehaviour
         }
         else
         {
-            Debug.LogError($"Stockが見つかりません: player={player}, type={type}");
+            // Debug.LogError($"Stockが見つかりません: player={player}, type={type}");
         }
     }
     public void ResetStock()
