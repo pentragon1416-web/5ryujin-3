@@ -65,7 +65,6 @@ public class NetworkCursorViewer : MonoBehaviour
         // =====================================
         if (md.pieceType != lastPieceType)
         {
-            ApplyPlayerColor();
             ApplyPiecePrefab(md.pieceType);
             lastPieceType = md.pieceType;
         }
@@ -107,7 +106,7 @@ public class NetworkCursorViewer : MonoBehaviour
             if (sr != null)
             {
                 sr.sortingOrder = 10;
-                sr.color = !forPlayer ? color2p : color1p;
+                sr.color = forPlayer ? color2p : color1p;
             }
         }
     }
@@ -149,6 +148,8 @@ public class NetworkCursorViewer : MonoBehaviour
         }
 
         currentPiece = Instantiate(pieces[type], transform);
+
+        ApplyPlayerColor();
     }
 
     public void ClearPiece()
