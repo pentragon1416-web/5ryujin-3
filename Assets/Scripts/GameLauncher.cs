@@ -114,9 +114,11 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             upperNetworkCursorTracker = upperCursorTrackerObj.GetComponent<NetworkCursorTracker>();
             upperNetworkCursorTracker.RpcSetCursorTrackerType(CursorTrackerType.Upper);
             upperNetworkCursorTracker.RpcSetForPlayer(true);
+            upperNetworkCursorTracker.gameObject.SetActive(false);
             lowerNetworkCursorTracker = lowerCursorTrackerObj.GetComponent<NetworkCursorTracker>();
             lowerNetworkCursorTracker.RpcSetCursorTrackerType(CursorTrackerType.Lower);
             lowerNetworkCursorTracker.RpcSetForPlayer(false);
+            lowerNetworkCursorTracker.gameObject.SetActive(false);
 
             networkRecordManager = obj.GetComponent<NetworkRecordManager>();
             networkPieceCursor.enabled = false;
@@ -201,6 +203,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             UpperPass.SetActive(false);
             networkPieceCursor.SetMyTurn(false);
             networkPieceCursor.SetCursorTracker(lowerNetworkCursorTracker);
+            upperNetworkCursorTracker.gameObject.SetActive(true);
             lowerNetworkCursorTracker.gameObject.SetActive(false);
             messageController.ShowMessage("Lower!");
         }
@@ -212,6 +215,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             networkPieceCursor.SetMyTurn(true);
             networkPieceCursor.SetCursorTracker(upperNetworkCursorTracker);
             upperNetworkCursorTracker.gameObject.SetActive(false);
+            lowerNetworkCursorTracker.gameObject.SetActive(true);
             messageController.ShowMessage("Upper!");
         }
         messageController.HideMessageAfterDelay(1f);
