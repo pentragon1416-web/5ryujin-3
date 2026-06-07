@@ -40,6 +40,7 @@ public class NetworkPieceCursor : MonoBehaviour
     private bool isOperatingUI = false;
     private List<MoveData> moveDataList = new();
     public bool myTurn = false;
+    public bool gameStarted = false;
 
     void OnEnable()
     {
@@ -59,10 +60,23 @@ public class NetworkPieceCursor : MonoBehaviour
     void Update()
     {
         if (myTurn != Board.turn) return;
+
+        // まず入力更新
         if (Input.touchCount > 0)
             HandleTouch();
         else
             HandleMouse();
+        if(gameStarted)
+        {
+            // MoveData取得
+            MoveData md = GetMoveData();
+            if(md != null)
+            {
+                // 送信
+                NetworkMoveData nmd = NetworkMoveData.FromMoveData(md);
+                cursorTracker.RpcUpdateCursor(nmd);
+            }
+        }
     }
     public void SetNetworkRecordManager(NetworkRecordManager nrm)
     {
@@ -71,6 +85,15 @@ public class NetworkPieceCursor : MonoBehaviour
     public void SetMyTurn(bool isMyTurn)
     {
         myTurn = isMyTurn;
+    }
+    public void SetCursorTracker(NetworkCursorTracker tracker)
+    {
+        cursorTracker = tracker;
+    }
+
+    public void StartGame()
+    {
+        gameStarted = true;
     }
 
     private void HandleTouch()
@@ -158,6 +181,37 @@ public class NetworkPieceCursor : MonoBehaviour
         isOperatingUI = false;
         Put();
     }
+
+    public MoveData GetMoveData()
+    {
+        if (piece == null)
+        {
+            return default;
+        }
+
+        int rotation = GetCurrentRotation();
+        bool flipped = IsCurrentlyFlipped();
+
+        int x = Mathf.RoundToInt(transform.position.x);
+        int y = Mathf.RoundToInt(transform.position.y);
+        bool player = Board.turn;
+
+        bool touchdown = (pieceType == PieceType.td);
+
+        MoveData md = new MoveData
+        {
+            turn = 0,
+            player = player,
+            pieceType = pieceType,
+            rotation = rotation,
+            flipped = flipped,
+            x = x,
+            y = y,
+            touchdown = touchdown
+        };
+
+        return md;
+}
 
     public void Put()
     {

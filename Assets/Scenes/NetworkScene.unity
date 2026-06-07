@@ -970,71 +970,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 210723463}
   m_CullTransparentMesh: 1
---- !u!1 &264384984
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 264384987}
-  - component: {fileID: 264384986}
-  - component: {fileID: 264384985}
-  m_Layer: 0
-  m_Name: NetworkCursorTracker
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &264384985
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 264384984}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SortKey: 963203783
-  ObjectInterest: 1
-  Flags: 262145
-  NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 264384986}
-  ForceRemoteRenderTimeframe: 0
---- !u!114 &264384986
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 264384984}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1cd04343a6e07644cacf7273faecda16, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &264384987
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 264384984}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 26.428919, y: 13.628114, z: -0.12432853}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1032211756}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &405786647
 GameObject:
   m_ObjectHideFlags: 0
@@ -2977,79 +2912,6 @@ Transform:
   - {fileID: 473001303}
   m_Father: {fileID: 1848038543}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1032211755
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1032211756}
-  - component: {fileID: 1032211757}
-  m_Layer: 0
-  m_Name: NetworkCursorViewer
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1032211756
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1032211755}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 264384987}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1032211757
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1032211755}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9efaf5ba4c00f954ab01119f40d90e85, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cursorTracker: {fileID: 264384986}
-  player: 0
-  piecesList:
-  - type: 0
-    prefab: {fileID: 7429804384838392362, guid: e99efca67a3da4441b9158411bcb3f20, type: 3}
-  - type: 1
-    prefab: {fileID: 4916683864977085302, guid: deb681f294cef834dbf8e90c596ce4da, type: 3}
-  - type: 2
-    prefab: {fileID: 1839925252295122685, guid: 2f3cb09afa9fa4943a04b824ec35bf08, type: 3}
-  - type: 3
-    prefab: {fileID: 8117818306376423326, guid: 4dd46a7a23ef79c458bd7e082655a979, type: 3}
-  - type: 4
-    prefab: {fileID: 6535151251035351827, guid: 6d46307787813da41afe30b239b04cea, type: 3}
-  - type: 5
-    prefab: {fileID: 1236273358709883321, guid: 55bfc1b3e81517146905bb8a81c7d6a9, type: 3}
-  - type: 6
-    prefab: {fileID: 6535151251035351827, guid: 8e65b9b06505f2c43915c3ced47cc643, type: 3}
-  - type: 7
-    prefab: {fileID: 3592300335686093817, guid: 7ea6f7d16a3c8a34aa450eb37381293c, type: 3}
-  - type: 8
-    prefab: {fileID: 380541494030335059, guid: a19ff1b57e3467d44a4a51c539f1d90e, type: 3}
-  - type: 9
-    prefab: {fileID: 1926151044042920036, guid: 6f84214b60ba66b40a7607515acd9dac, type: 3}
-  - type: 10
-    prefab: {fileID: 5992867537122223747, guid: fe05501a4498f664fa315fb8a4b6a024, type: 3}
-  - type: 11
-    prefab: {fileID: 7747322136819803338, guid: 54871f65d75b7d348b4e816e561961a5, type: 3}
-  - type: 12
-    prefab: {fileID: 4044608685038442759, guid: 3bf9a967b038a9e439202b309f3179f9, type: 3}
 --- !u!1 &1036193335
 GameObject:
   m_ObjectHideFlags: 0
@@ -3931,6 +3793,8 @@ MonoBehaviour:
     RawGuidValue: 8483355a5c81a1945965de01cfb6a9aa
   networkControllerPrefab:
     RawGuidValue: 2188e104d32a3c848bc7f592a469c8fa
+  networkCursorTrackerPrefab:
+    RawGuidValue: ef5dd6d5dc527a24a950043f19d6c834
   networkPieceCursor: {fileID: 583410904}
   gameUIForNetwork: {fileID: 72266327}
   timer: {fileID: 1173701267}
@@ -7063,4 +6927,3 @@ SceneRoots:
   - {fileID: 1312663102}
   - {fileID: 72266328}
   - {fileID: 5321854656659441549}
-  - {fileID: 264384987}

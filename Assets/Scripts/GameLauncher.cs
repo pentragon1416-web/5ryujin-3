@@ -11,6 +11,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] private NetworkRunner networkRunnerPrefab;
     [SerializeField] private NetworkPrefabRef networkRecordManagerPrefab;
     [SerializeField] private NetworkPrefabRef networkControllerPrefab;
+    [SerializeField] private NetworkPrefabRef networkCursorTrackerPrefab;
 
     [Header("ローカルセッティング用")]
     [SerializeField] private NetworkPieceCursor networkPieceCursor;
@@ -29,6 +30,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     private NetworkRunner runner;
     private NetworkRecordManager networkRecordManager;
     private NetworkController networkController;
+    private NetworkCursorTracker networkCursorTracker;
     private bool isInitialized;
     private bool shouldStartGame = false;
     private bool isHost = false;
@@ -90,7 +92,17 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
                 flags: NetworkSpawnFlags.SharedModeStateAuthMasterClient
             );
 
+            var cursorTrackerObj = runner.Spawn(
+                networkCursorTrackerPrefab,
+                Vector3.zero,
+                Quaternion.identity,
+                inputAuthority: null,
+                onBeforeSpawned: null,
+                flags: NetworkSpawnFlags.SharedModeStateAuthMasterClient
+            );
+
             networkController = controllerObj.GetComponent<NetworkController>();
+            networkCursorTracker = cursorTrackerObj.GetComponent<NetworkCursorTracker>();
 
             networkRecordManager = obj.GetComponent<NetworkRecordManager>();
             networkPieceCursor.enabled = false;
@@ -135,13 +147,14 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
         // ゲーム初期化処理
         networkPieceCursor.SetNetworkRecordManager(networkRecordManager);
+        networkPieceCursor.SetCursorTracker(networkCursorTracker);
+        networkPieceCursor.enabled = true;
         Board.instance.SetPieceCursor(networkPieceCursor);
         networkController.SetNetworkPieceCursor(networkPieceCursor);
         networkController.SetTimer(timer);
         networkController.SetMessageController(messageController);
         networkController.RpcResetCounter();
         gameUIForNetwork.SetNetworkController(networkController);
-        networkPieceCursor.enabled = true;
         InitializeGame();
     }
 
@@ -164,6 +177,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             messageController.ShowMessage("Upper!");
         }
         messageController.HideMessageAfterDelay(1f);
+        networkPieceCursor.StartGame();
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
