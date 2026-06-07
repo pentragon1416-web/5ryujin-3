@@ -4,7 +4,7 @@ using UnityEngine;
 public class NetworkCursorTracker : NetworkBehaviour
 {
     public NetworkCursorViewer cursorViewer;
-    [Networked] public NetworkMoveData nmd { get; set;}
+    [Networked] public NetworkMoveData nmd { get; set; }
     [Networked] public CursorTrackerType TrackerType { get; set; }
 
     [Rpc(RpcSources.All, RpcTargets.All)]
@@ -16,6 +16,11 @@ public class NetworkCursorTracker : NetworkBehaviour
     public void RpcSetCursorTrackerType(CursorTrackerType type)
     {
         TrackerType = type;
+    }
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void RpcSetForPlayer(bool forPlayer)
+    {
+        cursorViewer.SetForPlayer(forPlayer);
     }
     public MoveData GetCursorData()
     {

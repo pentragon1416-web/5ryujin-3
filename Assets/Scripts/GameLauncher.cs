@@ -113,8 +113,10 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             networkController = controllerObj.GetComponent<NetworkController>();
             upperNetworkCursorTracker = upperCursorTrackerObj.GetComponent<NetworkCursorTracker>();
             upperNetworkCursorTracker.RpcSetCursorTrackerType(CursorTrackerType.Upper);
+            upperNetworkCursorTracker.RpcSetForPlayer(true);
             lowerNetworkCursorTracker = lowerCursorTrackerObj.GetComponent<NetworkCursorTracker>();
             lowerNetworkCursorTracker.RpcSetCursorTrackerType(CursorTrackerType.Lower);
+            lowerNetworkCursorTracker.RpcSetForPlayer(false);
 
             networkRecordManager = obj.GetComponent<NetworkRecordManager>();
             networkPieceCursor.enabled = false;
@@ -149,27 +151,27 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             networkController = FindFirstObjectByType<NetworkController>();
             yield return null;
         }
-    while (upperNetworkCursorTracker == null || lowerNetworkCursorTracker == null)
-    {
-        var trackers = FindObjectsByType<NetworkCursorTracker>(
-            FindObjectsSortMode.None);
-
-        foreach (var tracker in trackers)
+        while (upperNetworkCursorTracker == null || lowerNetworkCursorTracker == null)
         {
-            switch (tracker.TrackerType)
+            var trackers = FindObjectsByType<NetworkCursorTracker>(
+                FindObjectsSortMode.None);
+
+            foreach (var tracker in trackers)
             {
-                case CursorTrackerType.Upper:
-                    upperNetworkCursorTracker = tracker;
-                    break;
+                switch (tracker.TrackerType)
+                {
+                    case CursorTrackerType.Upper:
+                        upperNetworkCursorTracker = tracker;
+                        break;
 
-                case CursorTrackerType.Lower:
-                    lowerNetworkCursorTracker = tracker;
-                    break;
+                    case CursorTrackerType.Lower:
+                        lowerNetworkCursorTracker = tracker;
+                        break;
+                }
             }
-        }
 
-        yield return null;
-    }
+            yield return null;
+        }
 
         if (isInitialized)
             yield break;

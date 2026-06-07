@@ -67,6 +67,10 @@ public class NetworkCursorViewer : MonoBehaviour
             lastPieceType = md.pieceType;
         }
     }
+    public void SetForPlayer(bool forPlayer)
+    {
+        this.forPlayer = forPlayer;
+    }
 
     // =====================================
     // 位置・回転・反転（毎フレーム）
@@ -130,7 +134,7 @@ public class NetworkCursorViewer : MonoBehaviour
 
     public void ClearPiece()
     {
-        if(currentPiece != null)
+        if (currentPiece != null)
         {
             Destroy(currentPiece);
             currentPiece = null;
