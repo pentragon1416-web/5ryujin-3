@@ -34,6 +34,8 @@ public class NetworkPieceCursor : MonoBehaviour
     public PieceDatabase pieceDatabase;
     [Header("NetworkRecordManager")]
     private NetworkRecordManager networkRecordManager;
+    [Header("NetworkCursorTracker")]
+    public NetworkCursorTracker cursorTracker;
 
     private bool isOperatingUI = false;
     private List<MoveData> moveDataList = new();

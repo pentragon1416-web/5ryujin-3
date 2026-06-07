@@ -1,18 +1,18 @@
 using Fusion;
 using UnityEngine;
 
-public class NetworkCursor : NetworkBehaviour
+public class NetworkCursorTracker : NetworkBehaviour
 {
-    [Networked] public float X { get; set; }
-    [Networked] public float Y { get; set; }
-
-    [Networked] public PieceType PieceType { get; set; }
+    [Networked] public NetworkMoveData nmd { get; set;}
 
     [Rpc(RpcSources.All, RpcTargets.All)]
-    public void RpcUpdateCursor(float x, float y, PieceType pieceType)
+    public void RpcUpdateCursor(NetworkMoveData nmd)
     {
-        X = x;
-        Y = y;
-        PieceType = pieceType;
+        this.nmd = nmd;
+    }
+
+    public MoveData GetCursorData()
+    {
+        return nmd.ToMoveData();
     }
 }

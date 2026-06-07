@@ -34,6 +34,8 @@ public class PieceCursor : MonoBehaviour
     public PieceDatabase pieceDatabase;
     [Header("MoveDataLoader")]
     public MoveDataLoader moveDataLoader;
+    [Header("LocalCursorTracker")]
+    public LocalCursorTracker cursorTracker;
 
     private bool isOperatingUI = false;
     private List<MoveData> moveDataList = new();
@@ -55,6 +57,7 @@ public class PieceCursor : MonoBehaviour
 
     void Update()
     {
+        cursorTracker.UpdateCursor(GetMoveData());
         if (Input.touchCount > 0)
             HandleTouch();
         else
@@ -147,6 +150,36 @@ public class PieceCursor : MonoBehaviour
         Put();
     }
 
+    public MoveData GetMoveData()
+    {
+        if (piece == null)
+        {
+            return default;
+        }
+
+        int rotation = GetCurrentRotation();
+        bool flipped = IsCurrentlyFlipped();
+
+        int x = Mathf.RoundToInt(transform.position.x);
+        int y = Mathf.RoundToInt(transform.position.y);
+        bool player = Board.turn;
+
+        bool touchdown = (pieceType == PieceType.td);
+
+        MoveData md = new MoveData
+        {
+            turn = 0,
+            player = player,
+            pieceType = pieceType,
+            rotation = rotation,
+            flipped = flipped,
+            x = x,
+            y = y,
+            touchdown = touchdown
+        };
+
+        return md;
+    }
     public void Put()
     {
         if (piece == null) return;
