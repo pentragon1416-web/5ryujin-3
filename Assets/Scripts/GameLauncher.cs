@@ -112,7 +112,9 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
             networkController = controllerObj.GetComponent<NetworkController>();
             upperNetworkCursorTracker = upperCursorTrackerObj.GetComponent<NetworkCursorTracker>();
+            upperNetworkCursorTracker.RpcSetCursorTrackerType(CursorTrackerType.Upper);
             lowerNetworkCursorTracker = lowerCursorTrackerObj.GetComponent<NetworkCursorTracker>();
+            lowerNetworkCursorTracker.RpcSetCursorTrackerType(CursorTrackerType.Lower);
 
             networkRecordManager = obj.GetComponent<NetworkRecordManager>();
             networkPieceCursor.enabled = false;
@@ -131,11 +133,11 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     private IEnumerator WaitForNetworkRecordManager()
     {
         // shouldStartGameがtrueになるまで待機
-        // while (!shouldStartGame)
-        // {
-        //     Timer.ResetCounter();
-        //     yield return null;
-        // }
+        while (!shouldStartGame)
+        {
+            Timer.ResetCounter();
+            yield return null;
+        }
         // ネットワークオブジェクトの取得
         while (networkRecordManager == null)
         {
@@ -147,6 +149,27 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             networkController = FindFirstObjectByType<NetworkController>();
             yield return null;
         }
+    while (upperNetworkCursorTracker == null || lowerNetworkCursorTracker == null)
+    {
+        var trackers = FindObjectsByType<NetworkCursorTracker>(
+            FindObjectsSortMode.None);
+
+        foreach (var tracker in trackers)
+        {
+            switch (tracker.TrackerType)
+            {
+                case CursorTrackerType.Upper:
+                    upperNetworkCursorTracker = tracker;
+                    break;
+
+                case CursorTrackerType.Lower:
+                    lowerNetworkCursorTracker = tracker;
+                    break;
+            }
+        }
+
+        yield return null;
+    }
 
         if (isInitialized)
             yield break;
@@ -176,7 +199,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             UpperPass.SetActive(false);
             networkPieceCursor.SetMyTurn(false);
             networkPieceCursor.SetCursorTracker(lowerNetworkCursorTracker);
-            upperNetworkCursorTracker.gameObject.SetActive(false);
+            lowerNetworkCursorTracker.gameObject.SetActive(false);
             messageController.ShowMessage("Lower!");
         }
         else
@@ -186,6 +209,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             LowerPass.SetActive(false);
             networkPieceCursor.SetMyTurn(true);
             networkPieceCursor.SetCursorTracker(upperNetworkCursorTracker);
+            upperNetworkCursorTracker.gameObject.SetActive(false);
             messageController.ShowMessage("Upper!");
         }
         messageController.HideMessageAfterDelay(1f);
