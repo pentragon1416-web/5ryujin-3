@@ -30,7 +30,8 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     private NetworkRunner runner;
     private NetworkRecordManager networkRecordManager;
     private NetworkController networkController;
-    private NetworkCursorTracker networkCursorTracker;
+    private NetworkCursorTracker upperNetworkCursorTracker;
+    private NetworkCursorTracker lowerNetworkCursorTracker;
     private bool isInitialized;
     private bool shouldStartGame = false;
     private bool isHost = false;
@@ -92,7 +93,15 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
                 flags: NetworkSpawnFlags.SharedModeStateAuthMasterClient
             );
 
-            var cursorTrackerObj = runner.Spawn(
+            var upperCursorTrackerObj = runner.Spawn(
+                networkCursorTrackerPrefab,
+                Vector3.zero,
+                Quaternion.identity,
+                inputAuthority: null,
+                onBeforeSpawned: null,
+                flags: NetworkSpawnFlags.SharedModeStateAuthMasterClient
+            );
+            var lowerCursorTrackerObj = runner.Spawn(
                 networkCursorTrackerPrefab,
                 Vector3.zero,
                 Quaternion.identity,
@@ -102,7 +111,8 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             );
 
             networkController = controllerObj.GetComponent<NetworkController>();
-            networkCursorTracker = cursorTrackerObj.GetComponent<NetworkCursorTracker>();
+            upperNetworkCursorTracker = upperCursorTrackerObj.GetComponent<NetworkCursorTracker>();
+            lowerNetworkCursorTracker = lowerCursorTrackerObj.GetComponent<NetworkCursorTracker>();
 
             networkRecordManager = obj.GetComponent<NetworkRecordManager>();
             networkPieceCursor.enabled = false;
@@ -121,11 +131,11 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     private IEnumerator WaitForNetworkRecordManager()
     {
         // shouldStartGameがtrueになるまで待機
-        while (!shouldStartGame)
-        {
-            Timer.ResetCounter();
-            yield return null;
-        }
+        // while (!shouldStartGame)
+        // {
+        //     Timer.ResetCounter();
+        //     yield return null;
+        // }
         // ネットワークオブジェクトの取得
         while (networkRecordManager == null)
         {
@@ -147,7 +157,6 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
         // ゲーム初期化処理
         networkPieceCursor.SetNetworkRecordManager(networkRecordManager);
-        networkPieceCursor.SetCursorTracker(networkCursorTracker);
         networkPieceCursor.enabled = true;
         Board.instance.SetPieceCursor(networkPieceCursor);
         networkController.SetNetworkPieceCursor(networkPieceCursor);
@@ -166,6 +175,8 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             UpperGU.SetActive(false);
             UpperPass.SetActive(false);
             networkPieceCursor.SetMyTurn(false);
+            networkPieceCursor.SetCursorTracker(lowerNetworkCursorTracker);
+            upperNetworkCursorTracker.gameObject.SetActive(false);
             messageController.ShowMessage("Lower!");
         }
         else
@@ -174,6 +185,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             LowerGU.SetActive(false);
             LowerPass.SetActive(false);
             networkPieceCursor.SetMyTurn(true);
+            networkPieceCursor.SetCursorTracker(upperNetworkCursorTracker);
             messageController.ShowMessage("Upper!");
         }
         messageController.HideMessageAfterDelay(1f);

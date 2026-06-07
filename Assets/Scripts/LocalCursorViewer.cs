@@ -26,14 +26,18 @@ public class LocalCursorViewer : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        ClearPiece();
+    }
+
     public void Update()
     {
-        // if (player == Board.turn)
-        // {
-        //     enabled = false;
-        //     return;
-        // }
-
+        if (player != Board.turn)
+        {
+            ClearPiece();
+            return;
+        }
         MoveData md = cursorTracker.GetCursorData();
         if (md == null) return;
         Debug.Log("CursorViewer Update: " + md.ToString());
@@ -110,5 +114,14 @@ public class LocalCursorViewer : MonoBehaviour
         }
 
         currentPiece = Instantiate(pieces[type], transform);
+    }
+
+    public void ClearPiece()
+    {
+        if (currentPiece != null)
+        {
+            Destroy(currentPiece);
+            currentPiece = null;
+        }
     }
 }

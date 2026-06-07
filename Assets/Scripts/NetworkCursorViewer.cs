@@ -6,7 +6,7 @@ using static NetworkPieceCursor;
 public class NetworkCursorViewer : MonoBehaviour
 {
     public NetworkCursorTracker cursorTracker;
-    public bool player;
+    public bool forPlayer;
 
     [SerializeField] private List<PiecePrefabPair> piecesList;
 
@@ -29,14 +29,22 @@ public class NetworkCursorViewer : MonoBehaviour
 
     public void Update()
     {
-        // if (player == Board.turn)
-        // {
-        //     enabled = false;
-        //     return;
-        // }
-
+        if (forPlayer != Board.turn)
+        {
+            ClearPiece();
+            return;
+        }
         MoveData md = cursorTracker.GetCursorData();
         if (md == null) return;
+        Debug.Log(
+            $"[MoveData]\n" +
+            $"pieceType: {md.pieceType}\n" +
+            $"x: {md.x}, y: {md.y}\n" +
+            $"rotation: {md.rotation}\n" +
+            $"flipped: {md.flipped}\n" +
+            $"player: {md.player}\n" +
+            $"touchdown: {md.touchdown}\n"
+        );
         Debug.Log("CursorViewer Update: " + md.ToString());
         // =====================================
         // ① 位置・回転・反転は常に更新
@@ -111,5 +119,14 @@ public class NetworkCursorViewer : MonoBehaviour
         }
 
         currentPiece = Instantiate(pieces[type], transform);
+    }
+
+    public void ClearPiece()
+    {
+        if(currentPiece != null)
+        {
+            Destroy(currentPiece);
+            currentPiece = null;
+        }
     }
 }

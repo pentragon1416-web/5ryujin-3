@@ -4835,6 +4835,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1277734080891491065, guid: ca75bbc30b316644398adf86427e1ab7, type: 3}
+      propertyPath: player
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6185811466493562463, guid: ca75bbc30b316644398adf86427e1ab7, type: 3}
       propertyPath: m_Name
       value: LocalCursorTracker

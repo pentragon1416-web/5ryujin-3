@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class NetworkCursorTracker : NetworkBehaviour
 {
+    public NetworkCursorViewer cursorViewer;
     [Networked] public NetworkMoveData nmd { get; set;}
 
     [Rpc(RpcSources.All, RpcTargets.All)]
@@ -10,7 +11,6 @@ public class NetworkCursorTracker : NetworkBehaviour
     {
         this.nmd = nmd;
     }
-
     public MoveData GetCursorData()
     {
         return nmd.ToMoveData();

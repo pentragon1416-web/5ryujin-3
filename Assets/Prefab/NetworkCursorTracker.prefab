@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cursorTracker: {fileID: 7403131724168454811}
-  player: 0
+  forPlayer: 0
   piecesList:
   - type: 0
     prefab: {fileID: 7429804384838392362, guid: e99efca67a3da4441b9158411bcb3f20, type: 3}
@@ -119,6 +119,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cd04343a6e07644cacf7273faecda16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cursorViewer: {fileID: 5534627373039405371}
 --- !u!114 &1888135282576701336
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -186,7 +186,18 @@ public class NetworkPieceCursor : MonoBehaviour
     {
         if (piece == null)
         {
-            return default;
+            MoveData initMd = new MoveData
+            {
+                turn = 0,
+                player = false,
+                pieceType = PieceType.td,
+                rotation = 0,
+                flipped = false,
+                x = -1000,
+                y = 0,
+                touchdown = false
+            };
+            return initMd;
         }
 
         int rotation = GetCurrentRotation();

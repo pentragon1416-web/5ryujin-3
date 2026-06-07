@@ -24,5 +24,5 @@ public enum PieceType
     W,
     X,
     Y,
-    Z
+    Z,
 }
