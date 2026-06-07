@@ -57,6 +57,7 @@ public class NetworkCursorViewer : MonoBehaviour
         // ① 位置・回転・反転は常に更新
         // =====================================
         ApplyTransform(md);
+        ApplyPlayerColor(forPlayer);
 
         // =====================================
         // ② PieceTypeだけ差分監視
@@ -91,6 +92,22 @@ public class NetworkCursorViewer : MonoBehaviour
 
         // flipは最後に見た目として適用
         transform.localScale = new Vector3(md.flipped ? -1 : 1, 1, 1);
+    }
+
+    private void ApplyPlayerColor(bool isPlayer)
+    {
+        if (currentPiece == null)
+            return;
+
+        SpriteRenderer sr = currentPiece.GetComponent<SpriteRenderer>();
+
+        if (sr == null)
+        {
+            Debug.LogWarning("SpriteRenderer が見つかりません");
+            return;
+        }
+
+        sr.color = isPlayer ? Color.red : Color.black;
     }
 
     // =====================================
