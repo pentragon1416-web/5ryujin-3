@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Fusion;
 using static NetworkPieceCursor;
 
-public class NetworkCursorViewer : MonoBehaviour
+public class LocalCursorViewer : MonoBehaviour
 {
-    public NetworkCursorTracker cursorTracker;
+    public LocalCursorTracker cursorTracker;
     public bool player;
 
     [SerializeField] private List<PiecePrefabPair> piecesList;
