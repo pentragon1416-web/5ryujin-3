@@ -79,7 +79,7 @@ public class NetworkCursorViewer : MonoBehaviour
     // =====================================
     private void ApplyTransform(MoveData md)
     {
-        transform.position = ConvertToWorldPosition(md.x, md.y + 5);
+        transform.position = ConvertToWorldPosition(md.x, md.y);
 
         // ★ 先にflipを考慮して回転補正
         float rot = md.rotation;
