@@ -15,6 +15,7 @@ public class NetworkCursorViewer : MonoBehaviour
     private GameObject currentPiece;
 
     private PieceType lastPieceType = PieceType.td;
+    private bool initialized = false;
 
     private void Awake()
     {
@@ -29,6 +30,12 @@ public class NetworkCursorViewer : MonoBehaviour
 
     public void Update()
     {
+        // はじめのフレームは見送る。
+        if (!initialized)
+        {
+            initialized = true;
+            return;
+        }
         if (forPlayer != Board.turn)
         {
             ClearPiece();
