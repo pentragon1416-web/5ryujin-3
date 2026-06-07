@@ -7,6 +7,8 @@ public class NetworkCursorViewer : MonoBehaviour
 {
     public NetworkCursorTracker cursorTracker;
     public bool forPlayer;
+    public Color32 color1p;
+    public Color32 color2p;
 
     [SerializeField] private List<PiecePrefabPair> piecesList;
 
@@ -57,13 +59,13 @@ public class NetworkCursorViewer : MonoBehaviour
         // ① 位置・回転・反転は常に更新
         // =====================================
         ApplyTransform(md);
-        ApplyPlayerColor(forPlayer);
 
         // =====================================
         // ② PieceTypeだけ差分監視
         // =====================================
         if (md.pieceType != lastPieceType)
         {
+            ApplyPlayerColor();
             ApplyPiecePrefab(md.pieceType);
             lastPieceType = md.pieceType;
         }
@@ -94,20 +96,20 @@ public class NetworkCursorViewer : MonoBehaviour
         transform.localScale = new Vector3(md.flipped ? -1 : 1, 1, 1);
     }
 
-    private void ApplyPlayerColor(bool isPlayer)
+    private void ApplyPlayerColor()
     {
-        if (currentPiece == null)
-            return;
-
-        SpriteRenderer sr = currentPiece.GetComponent<SpriteRenderer>();
-
-        if (sr == null)
+        for (int i = 0; i < currentPiece.transform.childCount; i++)
         {
-            Debug.LogWarning("SpriteRenderer が見つかりません");
-            return;
-        }
+            Transform child = currentPiece.transform.GetChild(i);
 
-        sr.color = isPlayer ? Color.red : Color.black;
+            SpriteRenderer sr = child.GetComponent<SpriteRenderer>();
+
+            if (sr != null)
+            {
+                sr.sortingOrder = 10;
+                sr.color = !forPlayer ? color2p : color1p;
+            }
+        }
     }
 
     // =====================================

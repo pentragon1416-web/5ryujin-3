@@ -46,6 +46,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cursorTracker: {fileID: 7403131724168454811}
   forPlayer: 0
+  color1p:
+    serializedVersion: 2
+    rgba: 4278190335
+  color2p:
+    serializedVersion: 2
+    rgba: 4278190080
   piecesList:
   - type: 0
     prefab: {fileID: 7429804384838392362, guid: e99efca67a3da4441b9158411bcb3f20, type: 3}
@@ -120,6 +126,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cursorViewer: {fileID: 5534627373039405371}
+  _TrackerType: 0
 --- !u!114 &1888135282576701336
 MonoBehaviour:
   m_ObjectHideFlags: 0
