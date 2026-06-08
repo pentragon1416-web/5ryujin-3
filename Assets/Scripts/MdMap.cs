@@ -92,10 +92,14 @@ public class MdMap
                 }
             }
             (float x, float y) t = childMagnets[i];
+            Debug.Log($"Checking magnet at {t} for player {player}");
+            Debug.Log($"All Magnet map entries: {string.Join(", ", magnetMap.Select(kvp => $"({kvp.Key}, player={kvp.Value.player}, num={kvp.Value.num})"))}");
             if (magnetMap.ContainsKey(t))
             {
+                Debug.Log($"Found existing magnet at {t} belonging to player {magnetMap[t].player}");
                 if (player == magnetMap[t].player)
                 {
+                    Debug.Log($"Magnet at {t} is valid for player {player} with num {magnetMap[t].num}");
                     break;
                 }
             }

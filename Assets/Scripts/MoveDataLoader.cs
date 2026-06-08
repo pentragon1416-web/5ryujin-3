@@ -44,47 +44,57 @@ public class MoveDataLoader : MonoBehaviour
     {
         mm = new MdMap(pieceDatabase);
     }
-
-    public void LoadMoveData(MoveData md)
+    public GameObject CreatePiece(MoveData md)
     {
-        // ストック減少処理
-        Board.instance.DecrementStock(md.player, md.pieceType);
-
         // プレハブ取得
         if (!pieceDict.TryGetValue(md.pieceType, out GameObject prefab))
         {
             Debug.LogError($"Prefab not found for {md.pieceType}");
-            return;
+            return null;
         }
 
-        // 生成位置（MoveDataの中心）
+        // 中心位置
         Vector3 pos = new Vector3(md.x, md.y, 0f);
 
         GameObject obj = Instantiate(prefab, pos, Quaternion.identity, pieceContainer.transform);
 
         // =========================
-        // rotation（基本回転）
+        // rotation（LocalCursorViewer基準）
         // =========================
-        obj.transform.rotation = Quaternion.Euler(0f, 0f, md.rotation);
+        float rot = md.rotation;
 
-        // =========================
-        // flipped（Z回転ベースで補正）
-        // =========================
         if (md.flipped)
         {
-            // 「piece.transform.Rotate(0, 0, 90) を参考」
-            // → Z軸で90度追加回転として扱う
-            obj.transform.Rotate(0f, 180f, 0f);
+            rot = -rot;
         }
+
+        obj.transform.rotation = Quaternion.Euler(0, 0, rot);
+
         // =========================
-        // ★追加：プレイヤーによる色変更
+        // flip（LocalCursorViewerと統一）
+        // =========================
+        obj.transform.localScale = md.flipped
+            ? new Vector3(-1, 1, 1)
+            : Vector3.one;
+
+        // =========================
+        // color
         // =========================
         Color c = md.player ? Color.black : Color.red;
-        SpriteRenderer[] renderers = obj.GetComponentsInChildren<SpriteRenderer>();
-        foreach (var r in renderers)
+
+        foreach (var r in obj.GetComponentsInChildren<SpriteRenderer>())
         {
             r.color = c;
         }
+
+        return obj;
+    }
+
+    public void LoadMoveData(MoveData md)
+    {
+        // ストック減少処理
+        Board.instance.DecrementStock(md.player, md.pieceType);
+        GameObject obj = CreatePiece(md);
         if (md.pieceType == PieceType.P)
         {
             mm.AddPDict(md, obj);

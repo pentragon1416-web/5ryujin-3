@@ -40,11 +40,12 @@ public class PieceInfo
 
     private Vector2 Transform(Vector2 v, MoveData md)
     {
-        // 反転 → 回転
-        if (md.flipped)
-            v = Flip(v);
-
+        // ① 回転（Unityと同じ方向）
         v = Rotate(v, md.rotation);
+
+        // ② flip（Unityのscale.x = -1と同じ扱い）
+        if (md.flipped)
+            v.x = -v.x;
 
         return v;
     }
