@@ -50,10 +50,12 @@ public class MdMap
             (float x, float y) tp = childTiles[i];
             if (placedTiles.ContainsKey(tp))
             {
+                Debug.Log("タイルが重複しています");
                 return false;
             }
             if (tp.x < 0 || tp.x >= 60 || tp.y < 0 || tp.y >= 30)
             {
+                Debug.Log("タイルが範囲外です");
                 return false;
             }
             foreach ((float x, float y) d in new (float, float)[] { (-1, 0), (1, 0), (0, -1), (0, 1) })
@@ -85,6 +87,7 @@ public class MdMap
                 }
                 else
                 {
+                    Debug.Log("Pゴマのマグネット位置が不正です");
                     return false;
                 }
             }
@@ -98,6 +101,9 @@ public class MdMap
             }
             if (i == childMagnets.Count - 1)
             {
+                Debug.Log("i = " + i);
+                Debug.Log("childMagnets.Count = " + childMagnets.Count);
+                Debug.Log("マグネットが隣接していません");
                 return false;
             }
         }
@@ -105,6 +111,7 @@ public class MdMap
         // 3. 隣接条件のチェック
         if (neighbor != 1 && !first || neighbor != 0 && first)
         {
+            Debug.Log("隣接するタイルの数が不正です");
             return false;
         }
 
@@ -246,10 +253,12 @@ public class MdMap
             (float x, float y) tp = (t.x, t.y);
             if (placedTiles.ContainsKey(tp))
             {
+                Debug.Log("タイルが重複しています");
                 return false;
             }
             if (tp.x < 0 || tp.x >= 60 || tp.y < 0 || tp.y >= 30)
             {
+                Debug.Log("タイルが範囲外です");
                 return false;
             }
             foreach ((float x, float y) d in new (float, float)[] { (-1, 0), (1, 0), (0, -1), (0, 1) })
@@ -289,7 +298,7 @@ public class MdMap
                 }
                 else
                 {
-                    Debug.Log("ダメでした");
+                    Debug.Log("Pゴマのマグネット位置が不正です");
                     return false;
                 }
             }
@@ -306,11 +315,13 @@ public class MdMap
             }
             if (i == childMagnets.Count - 1)
             {
+                Debug.Log("マグネットが隣接していません");
                 return false;
             }
         }
         if (neighbor != 1 && !first || neighbor != 0 && first)
         {
+            Debug.Log("隣接するタイルの数が不正です");
             return false;
         }
         int r;
