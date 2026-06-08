@@ -132,7 +132,7 @@ public class MoveDataLoader : MonoBehaviour
     }
     public void TestLoad()
     {
-        LoadMoveDataList(mdList);
+        LoadMoveDataList(mdList2);
     }
     List<MoveData> mdList = new List<MoveData>
         {
@@ -203,5 +203,118 @@ public class MoveDataLoader : MonoBehaviour
                 touchdown = false
             }
         };
+    List<MoveData> mdList2 = new List<MoveData>
+    {
+        new MoveData
+        {
+            turn = 0,
+            player = false,
+            pieceType = PieceType.P,
+            rotation = 180,
+            flipped = false,
+            x = 32,
+            y = 1,
+            touchdown = false
+        },
+        new MoveData
+        {
+            turn = 0,
+            player = false,
+            pieceType = PieceType.N,
+            rotation = 0,
+            flipped = false,
+            x = 33,
+            y = 4,
+            touchdown = false
+        },
+        new MoveData
+        {
+            turn = 0,
+            player = false,
+            pieceType = PieceType.Y,
+            rotation = 0,
+            flipped = false,
+            x = 33,
+            y = 9,
+            touchdown = false
+        },
+        new MoveData
+        {
+            turn = 0,
+            player = false,
+            pieceType = PieceType.I,
+            rotation = 0,
+            flipped = false,
+            x = 33,
+            y = 13,
+            touchdown = false
+        },
+        new MoveData
+        {
+            turn = 0,
+            player = false,
+            pieceType = PieceType.I,
+            rotation = 0,
+            flipped = false,
+            x = 33,
+            y = 18,
+            touchdown = false
+        },
+        new MoveData
+        {
+            turn = 0,
+            player = true,
+            pieceType = PieceType.P,
+            rotation = 0,
+            flipped = false,
+            x = 15,
+            y = 28,
+            touchdown = false
+        },
+        new MoveData
+        {
+            turn = 0,
+            player = false,
+            pieceType = PieceType.I,
+            rotation = 0,
+            flipped = false,
+            x = 33,
+            y = 23,
+            touchdown = false
+        },
+        new MoveData
+        {
+            turn = 0,
+            player = true,
+            pieceType = PieceType.X,
+            rotation = 0,
+            flipped = false,
+            x = 15,
+            y = 25,
+            touchdown = false
+        },
+        new MoveData
+        {
+            turn = 0,
+            player = false,
+            pieceType = PieceType.W,
+            rotation = 270,
+            flipped = false,
+            x = 34,
+            y = 27,
+            touchdown = false
+        },
+        new MoveData
+        {
+            turn = 0,
+            player = true,
+            pieceType = PieceType.X,
+            rotation = 0,
+            flipped = false,
+            x = 15,
+            y = 22,
+            touchdown = false
+        }
+    };
 
 }

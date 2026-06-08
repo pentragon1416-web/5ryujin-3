@@ -57,7 +57,7 @@ public class PieceCursor : MonoBehaviour
 
     void Update()
     {
-        cursorTracker.UpdateCursor(GetMoveData());
+        // cursorTracker.UpdateCursor(GetMoveData());
         if (Input.touchCount > 0)
             HandleTouch();
         else
