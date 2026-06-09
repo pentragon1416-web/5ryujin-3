@@ -178,7 +178,7 @@ public class Board : MonoBehaviour
 
     public void Judge()
     {
-        if (isJudged) return;
+        Debug.Log("isJudged =" + isJudged);
         int r1 = MdMap.reach[false];
         int r2 = 29 - MdMap.reach[true];
 
@@ -198,6 +198,7 @@ public class Board : MonoBehaviour
 
     public void Win(int i)
     {
+        if (isJudged) return;
         tmp.text = $"Player{i} win!!";
         tmp.transform.parent.gameObject.SetActive(true);
         pc.SetActive(false);
