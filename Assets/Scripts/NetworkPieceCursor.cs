@@ -66,11 +66,11 @@ public class NetworkPieceCursor : MonoBehaviour
             HandleTouch();
         else
             HandleMouse();
-        if(gameStarted)
+        if (gameStarted)
         {
             // MoveData取得
             MoveData md = GetMoveData();
-            if(md != null)
+            if (md != null)
             {
                 // 送信
                 NetworkMoveData nmd = NetworkMoveData.FromMoveData(md);
@@ -222,7 +222,7 @@ public class NetworkPieceCursor : MonoBehaviour
         };
 
         return md;
-}
+    }
 
     public void Put()
     {
@@ -291,6 +291,17 @@ public class NetworkPieceCursor : MonoBehaviour
 
     public void Select(PieceType type, Stock s)
     {
+        // もし自分のターンではなかったら選べないようにする。
+        if (myTurn != Board.turn)
+        {
+            if (piece != null)
+            {
+                Destroy(piece);
+                piece = null; // 参照も消しておくと安全
+            }
+
+            return;
+        }
         stock = s;
         Trash();
 
@@ -305,7 +316,6 @@ public class NetworkPieceCursor : MonoBehaviour
         MoveCursorToPointerPosition();
 
         piece = Instantiate(pieces[type], transform);
-
         childMagnets.Clear();
         childTiles.Clear();
 

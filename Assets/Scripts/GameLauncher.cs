@@ -38,6 +38,8 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
     private async void Start()
     {
+        // NetworkPieceCursorで自分のターンではないときには駒を表示させないようにしているので、この際に2Pに盤を渡す。
+        Board.instance.ChangeTo(true);
         runner = Instantiate(networkRunnerPrefab);
         runner.AddCallbacks(this);
         runner.ProvideInput = true;
@@ -220,6 +222,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         }
         messageController.HideMessageAfterDelay(1f);
         networkPieceCursor.StartGame();
+        Board.instance.ChangeTo(false);
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
