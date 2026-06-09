@@ -34,6 +34,7 @@ public class Board : MonoBehaviour
 
     private Dictionary<PieceType, GameObject> imageDict;
     private Dictionary<(bool, PieceType), Stock> stockDict;
+    private bool isJudged = false;
 
     void Start()
     {
@@ -177,6 +178,7 @@ public class Board : MonoBehaviour
 
     public void Judge()
     {
+        if (isJudged) return;
         int r1 = MdMap.reach[false];
         int r2 = 29 - MdMap.reach[true];
 
@@ -205,6 +207,7 @@ public class Board : MonoBehaviour
             tmp.text = "Draw";
         }
         goHomeButton.SetActive(true);
+        isJudged = true;
     }
 
     public void Giveup(int i)
