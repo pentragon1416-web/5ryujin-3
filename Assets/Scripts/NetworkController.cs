@@ -5,9 +5,9 @@ using Fusion;
 
 public class NetworkController : NetworkBehaviour
 {
+    [Networked] public int timerLimit { get; set; }
     private NetworkPieceCursor networkPieceCursor;
     private Timer timer;
-    private int timerLimit;
     private MessageController messageController;
     // 初期設定
     public void SetNetworkPieceCursor(NetworkPieceCursor cursor)
@@ -18,10 +18,6 @@ public class NetworkController : NetworkBehaviour
     public void SetTimer(Timer timer)
     {
         this.timer = timer;
-    }
-    public void SetTimerLimit(int limit)
-    {
-        this.timerLimit = limit;
     }
     // プレイ中に時効が必要なもの
 
@@ -82,6 +78,11 @@ public class NetworkController : NetworkBehaviour
     public void RpcHideMessageAfterDelay(float delay)
     {
         messageController.HideMessageAfterDelay(delay);
+    }
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RpcSetTimerLimit(int limit)
+    {
+        timerLimit = limit;
     }
     [Rpc(RpcSources.All, RpcTargets.All)]
     public void RpcApplyTimerLimit()
