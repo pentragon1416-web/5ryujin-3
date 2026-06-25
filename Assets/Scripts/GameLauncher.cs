@@ -111,8 +111,9 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
                 onBeforeSpawned: null,
                 flags: NetworkSpawnFlags.SharedModeStateAuthMasterClient
             );
-
+            SessionManager.Instance.SetRoomSettings(new RoomSettings { roomNumber = 0, turnTime = 10 });
             networkController = controllerObj.GetComponent<NetworkController>();
+            networkController.SetTimerLimit(SessionManager.Instance.Settings.turnTime);
             upperNetworkCursorTracker = upperCursorTrackerObj.GetComponent<NetworkCursorTracker>();
             upperNetworkCursorTracker.RpcSetCursorTrackerType(CursorTrackerType.Upper);
             upperNetworkCursorTracker.RpcSetForPlayer(true);
@@ -208,6 +209,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             upperNetworkCursorTracker.gameObject.SetActive(true);
             lowerNetworkCursorTracker.gameObject.SetActive(false);
             messageController.ShowMessage("Lower!");
+            networkController.RpcApplyTimerLimit();
         }
         else
         {

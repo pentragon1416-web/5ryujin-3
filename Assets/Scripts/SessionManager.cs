@@ -1,3 +1,4 @@
+using UnityEngine;
 public class SessionManager : MonoBehaviour
 {
     public static SessionManager Instance;
@@ -15,12 +16,22 @@ public class SessionManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        Settings = new RoomSettings
+        {
+            roomNumber = 0,
+            turnTime = 45
+        };
+    }
+
+    public void SetRoomSettings(RoomSettings roomSettings)
+    {
+        this.Settings = roomSettings;
     }
 }
 
-[Serializable]
 public struct RoomSettings
 {
-    public int roomName;
+    public int roomNumber;
     public int turnTime;
 }

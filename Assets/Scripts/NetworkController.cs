@@ -83,4 +83,9 @@ public class NetworkController : NetworkBehaviour
     {
         messageController.HideMessageAfterDelay(delay);
     }
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void RpcApplyTimerLimit()
+    {
+        Timer.limit = timerLimit;
+    }
 }
