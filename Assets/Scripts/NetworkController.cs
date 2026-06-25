@@ -7,7 +7,9 @@ public class NetworkController : NetworkBehaviour
 {
     private NetworkPieceCursor networkPieceCursor;
     private Timer timer;
+    private int timerLimit;
     private MessageController messageController;
+    // 初期設定
     public void SetNetworkPieceCursor(NetworkPieceCursor cursor)
     {
         networkPieceCursor = cursor;
@@ -17,12 +19,17 @@ public class NetworkController : NetworkBehaviour
     {
         this.timer = timer;
     }
+    public void SetTimerLimit(int limit)
+    {
+        this.timerLimit = limit;
+    }
+    // プレイ中に時効が必要なもの
 
     public void SetMessageController(MessageController controller)
     {
         messageController = controller;
     }
-
+    // 共有中必要もの
     public void PutButton()
     {
         networkPieceCursor.PutButton();
