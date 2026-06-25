@@ -75,23 +75,48 @@ public class Timer : MonoBehaviour
         // 通常表示
         if (timelimit == null) return;
 
-        switch (limit)
+        ApplyText(counter, limit);
+
+        // switch (limit)
+        // {
+        //     case 30:
+        //         timelimit.text = "30 sec";
+        //         break;
+
+        //     case 60:
+        //         timelimit.text = "1 min";
+        //         break;
+
+        //     case 180:
+        //         timelimit.text = "3 min";
+        //         break;
+
+        //     default:
+        //         timelimit.text = "No limit";
+        //         break;
+        // }
+    }
+
+    void ApplyText(float counter, int limit)
+    {
+        if (limit <= 0)
         {
-            case 30:
-                timelimit.text = "30 sec";
-                break;
+            timelimit.text = "No limit";
+            return;
+        }
 
-            case 60:
-                timelimit.text = "1 min";
-                break;
+        float remain = Mathf.Max(0, limit - counter);
 
-            case 180:
-                timelimit.text = "3 min";
-                break;
+        int minutes = Mathf.FloorToInt(remain / 60);
+        int seconds = Mathf.FloorToInt(remain % 60);
 
-            default:
-                timelimit.text = "No limit";
-                break;
+        if (minutes > 0)
+        {
+            timelimit.text = $"{minutes}:{seconds:00}";
+        }
+        else
+        {
+            timelimit.text = $"{seconds} sec";
         }
     }
 
