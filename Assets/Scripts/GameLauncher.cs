@@ -47,7 +47,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         await runner.StartGame(new StartGameArgs
         {
             GameMode = GameMode.Shared,
-            SessionName = "OnlineMatch",
+            SessionName = $"{SessionManager.Instance.Settings.roomNumber}",
             PlayerCount = 2,
             IsOpen = true,
             IsVisible = true
