@@ -47,7 +47,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         await runner.StartGame(new StartGameArgs
         {
             GameMode = GameMode.Shared,
-            SessionName = $"{SessionManager.Instance.Settings.roomNumber}",
+            SessionName = SessionManager.Instance.Settings.roomNumber,
             PlayerCount = 2,
             IsOpen = true,
             IsVisible = true
@@ -111,7 +111,6 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
                 onBeforeSpawned: null,
                 flags: NetworkSpawnFlags.SharedModeStateAuthMasterClient
             );
-            SessionManager.Instance.SetRoomSettings(new RoomSettings { roomNumber = 0, turnTime = 60 });
             networkController = controllerObj.GetComponent<NetworkController>();
             networkController.RpcSetTimerLimit(SessionManager.Instance.Settings.turnTime);
             upperNetworkCursorTracker = upperCursorTrackerObj.GetComponent<NetworkCursorTracker>();

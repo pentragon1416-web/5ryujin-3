@@ -19,7 +19,7 @@ public class SessionManager : MonoBehaviour
 
         Settings = new RoomSettings
         {
-            roomNumber = 0,
+            roomNumber = "0",
             turnTime = 45
         };
     }
@@ -28,10 +28,18 @@ public class SessionManager : MonoBehaviour
     {
         this.Settings = roomSettings;
     }
+    public void SetRoomNumber(string n)
+    {
+        this.Settings.roomNumber = n;
+    }
+    public void SetTurnTime(int t)
+    {
+        this.Settings.turnTime = t;
+    }
 }
 
 public struct RoomSettings
 {
-    public int roomNumber;
+    public string roomNumber;
     public int turnTime;
 }
