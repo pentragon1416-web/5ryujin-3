@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.IO.LowLevel.Unsafe;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -14,15 +12,42 @@ public class Board : MonoBehaviour
     [SerializeField] GameObject canvas;
     [SerializeField] GameObject turnText;
     [SerializeField] TextMeshProUGUI tmp;
+    [SerializeField] GameObject goHomeButton;
+
     public static bool turn { get; private set; } // false = 1P
     public static Board instance;
-    public List<GameObject> images;
+
     [SerializeField] GameObject pc;
+
+    // =========================
+    // ★ Inspectorで対応付ける用
+    // =========================
+    [System.Serializable]
+    public struct PieceImagePair
+    {
+        public PieceType type;
+        public GameObject image;
+    }
+
+    [SerializeField]
+    private List<PieceImagePair> images;
+
+    private Dictionary<PieceType, GameObject> imageDict;
+    private Dictionary<(bool, PieceType), Stock> stockDict;
+    private bool isJudged = false;
 
     void Start()
     {
         turn = false;
         instance = this;
+        stockDict = new Dictionary<(bool, PieceType), Stock>();
+
+        // Dictionary化
+        imageDict = new Dictionary<PieceType, GameObject>();
+        foreach (var pair in images)
+        {
+            imageDict[pair.type] = pair.image;
+        }
 
         for (int i = 0; i < 30; i++)
         {
@@ -49,34 +74,57 @@ public class Board : MonoBehaviour
 
         GameObject firstPlayerIButton = null;
 
-        for (int i = 0; i < images.Count; i++)
+        // =========================
+        // PieceTypeベース生成
+        // =========================
+        int pieceIndex = 0;
+
+        foreach (PieceType type in System.Enum.GetValues(typeof(PieceType)))
         {
-            // 上側（2P側）
+            if (!imageDict.TryGetValue(type, out GameObject imagePrefab))
+            {
+                Debug.LogWarning("PieceType の画像が設定されていません: " + type);
+                continue;
+            }
+
+            // 上側（2P）
             GameObject t = Instantiate(button, canvas.transform);
             var pb = t.GetComponent<PieceButton>();
-            pb.number = i;
+            pb.pieceType = type;
             pb.turn = true;
 
             var st = t.GetComponent<Stock>();
-            st.image = images[i];
+            st.pieceType = type;
+            st.isFirstPlayer = true;
+            st.image = imagePrefab;
 
-            t.transform.localPosition = new Vector3(i * 150 - 825, 480, 0);
+            // stockDictに追加
+            stockDict[(true, type)] = st;
 
-            // 下側（1P側）
+            t.transform.localPosition = new Vector3(pieceIndex * 150 - 825, 480, 0);
+
+            // 下側（1P）
             t = Instantiate(button, canvas.transform);
             pb = t.GetComponent<PieceButton>();
-            pb.number = i;
+            pb.pieceType = type;
             pb.turn = false;
 
             st = t.GetComponent<Stock>();
-            st.image = images[i];
+            st.pieceType = type;
+            st.isFirstPlayer = false;
+            st.image = imagePrefab;
 
-            t.transform.localPosition = new Vector3(i * 150 - 825, -480, 0);
+            // stockDictに追加
+            stockDict[(false, type)] = st;
 
-            if (i == 0)
+            t.transform.localPosition = new Vector3(pieceIndex * 150 - 825, -480, 0);
+
+            if (type == PieceType.F)
             {
                 firstPlayerIButton = t;
             }
+
+            pieceIndex++;
         }
 
         if (firstPlayerIButton != null)
@@ -91,6 +139,10 @@ public class Board : MonoBehaviour
         {
             Change();
         }
+    }
+    public void SetPieceCursor(NetworkPieceCursor npc)
+    {
+        pc = npc.gameObject;
     }
 
     public void Change()
@@ -109,10 +161,26 @@ public class Board : MonoBehaviour
         Timer.ResetCounter();
     }
 
+    public void ChangeTo(bool t)
+    {
+        turn = t;
+        if (turn)
+        {
+            turnText.transform.localPosition = new Vector3(0, -18, 10);
+        }
+        else
+        {
+            turnText.transform.localPosition = new Vector3(0, 18, 10);
+        }
+
+        Timer.ResetCounter();
+    }
+
     public void Judge()
     {
-        int r1 = Map.reach[false];
-        int r2 = 29 - Map.reach[true];
+        Debug.Log("isJudged =" + isJudged);
+        int r1 = MdMap.reach[false];
+        int r2 = 29 - MdMap.reach[true];
 
         if (r1 == r2)
         {
@@ -130,6 +198,7 @@ public class Board : MonoBehaviour
 
     public void Win(int i)
     {
+        if (isJudged) return;
         tmp.text = $"Player{i} win!!";
         tmp.transform.parent.gameObject.SetActive(true);
         pc.SetActive(false);
@@ -138,6 +207,8 @@ public class Board : MonoBehaviour
         {
             tmp.text = "Draw";
         }
+        goHomeButton.SetActive(true);
+        isJudged = true;
     }
 
     public void Giveup(int i)
@@ -156,5 +227,25 @@ public class Board : MonoBehaviour
     public void Restart()
     {
         SceneManager.LoadScene("HomeScene");
+    }
+
+    public void DecrementStock(bool player, PieceType type)
+    {
+        if (stockDict.TryGetValue((player, type), out Stock stock))
+        {
+            stock.Decrement(); // Stock側にある想定
+        }
+        else
+        {
+            // Debug.LogError($"Stockが見つかりません: player={player}, type={type}");
+        }
+    }
+    public void ResetStock()
+    {
+        foreach (var pair in stockDict)
+        {
+            pair.Value.Reset();
+        }
+        ChangeTo(false);
     }
 }

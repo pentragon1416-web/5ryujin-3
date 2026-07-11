@@ -12,19 +12,19 @@ public class Map
     Dictionary<(float x, float y), (bool player, int num)> magnetMap;
     Dictionary<(float x, float y), bool> placedTiles;
     Dictionary<bool, int> dragonCount;
-    public static Dictionary<(bool, int), (GameObject go, List<(float x, float y)> pos)>pdict;
-    public static Dictionary<bool, int>reach;
+    public static Dictionary<(bool, int), (GameObject go, List<(float x, float y)> pos)> pdict;
+    public static Dictionary<bool, int> reach;
     public Map()
     {
         pdict = new Dictionary<(bool, int), (GameObject go, List<(float x, float y)> pos)>();
-        reach = new Dictionary<bool, int> {{false,0},{true,29}};
+        reach = new Dictionary<bool, int> { { false, 0 }, { true, 29 } };
         this.magnetMap = new Dictionary<(float x, float y), (bool player, int num)>();
         this.placedTiles = new Dictionary<(float x, float y), bool>();
         dragonCount = new Dictionary<bool, int> { { false, 0 }, { true, 0 } };
     }
     (float x, float y) ToTuple(Vector3 v)
     {
-        return (Mathf.Round(v.x*2)/2,Mathf.Round(v.y*2)/2);
+        return (Mathf.Round(v.x * 2) / 2, Mathf.Round(v.y * 2) / 2);
     }
     public bool Add(PieceCursor piece)
     {
@@ -59,11 +59,11 @@ public class Map
                 }
             }
         }
-        
-        
+
+
         for (int i = 0; i < piece.childMagnets.Count; i++)
         {
-            if (piece.number == 11)
+            if (piece.pieceType == PieceType.P)
             {
                 var p = piece.transform.GetChild(0).Find("Pointer");
                 var y = p.transform.position.y;
@@ -80,7 +80,7 @@ public class Map
                     num = dragonCount[Board.turn];
                     dragonCount[Board.turn] += 1;
                     first = true;
-                    pdict.Add((Board.turn, num), (piece.transform.GetChild(0).gameObject,tps));
+                    pdict.Add((Board.turn, num), (piece.transform.GetChild(0).gameObject, tps));
                     break;
                 }
                 else
@@ -138,7 +138,7 @@ public class Map
             var t = piece.childTiles[i];
             var tp = ToTuple(t.transform.position);
             this.placedTiles.Add(tp, Board.turn);
-            if (piece.number == 12)
+            if (piece.pieceType == PieceType.td)
             {
                 if (Board.turn)
                 {
@@ -151,9 +151,9 @@ public class Map
                     reach[false] = (int)Mathf.Max(r, reach[false]);
                 }
             }
-            
+
         }
-        
+
         var keys = GetKeysFromValue(magnetMap, (player, num));
 
         foreach (var key in keys)
@@ -162,10 +162,10 @@ public class Map
         }
         for (int i = 0; i < piece.childMagnets.Count; i++)
         {
-            
+
             var m = piece.childMagnets[i];
             var t = ToTuple(m.transform.position);
-            if (magnetMap.ContainsKey(t)||piece.number == 12)
+            if (magnetMap.ContainsKey(t) || piece.pieceType == PieceType.td)
             {
 
             }
@@ -174,7 +174,7 @@ public class Map
                 magnetMap.Add(t, (player, num));
             }
         }
-        if (piece.number == 12)
+        if (piece.pieceType == PieceType.td)
         {
             //Debug.Log(0);
             var p = pdict[(Board.turn, num)];
@@ -202,7 +202,7 @@ public class Map
             }
         }
         return true;
-    
+
 
     }
     static List<(float x, float y)> GetKeysFromValue(Dictionary<(float x, float y), (bool player, int num)> dictionary, (bool player, int num) value)

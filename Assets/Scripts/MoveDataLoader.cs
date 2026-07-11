@@ -1,0 +1,330 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class MoveDataLoader : MonoBehaviour
+{
+    [Header("PieceDatabase")]
+    public PieceDatabase pieceDatabase;
+
+    [Header("Piece Prefabs (Inspector)")]
+    [SerializeField]
+    private List<PieceEntry> pieceEntries;
+    [Header("PieceContainer")]
+    public GameObject pieceContainer;
+
+    private Dictionary<PieceType, GameObject> pieceDict;
+    public MdMap mm;
+
+    [System.Serializable]
+    public class PieceEntry
+    {
+        public PieceType type;
+        public GameObject prefab;
+    }
+
+    void Awake()
+    {
+        pieceDict = new Dictionary<PieceType, GameObject>();
+
+        foreach (var e in pieceEntries)
+        {
+            if (!pieceDict.ContainsKey(e.type))
+            {
+                pieceDict.Add(e.type, e.prefab);
+            }
+            else
+            {
+                Debug.LogWarning($"Duplicate PieceType: {e.type}");
+            }
+        }
+    }
+
+    void Start()
+    {
+        mm = new MdMap(pieceDatabase);
+    }
+    public GameObject CreatePiece(MoveData md)
+    {
+        // プレハブ取得
+        if (!pieceDict.TryGetValue(md.pieceType, out GameObject prefab))
+        {
+            Debug.LogError($"Prefab not found for {md.pieceType}");
+            return null;
+        }
+
+        // 中心位置
+        Vector3 pos = new Vector3(md.x, md.y, 0f);
+
+        GameObject obj = Instantiate(prefab, pos, Quaternion.identity, pieceContainer.transform);
+
+        // =========================
+        // rotation（LocalCursorViewer基準）
+        // =========================
+        float rot = md.rotation;
+
+        if (md.flipped)
+        {
+            rot = -rot;
+        }
+
+        obj.transform.rotation = Quaternion.Euler(0, 0, rot);
+
+        // =========================
+        // flip（LocalCursorViewerと統一）
+        // =========================
+        obj.transform.localScale = md.flipped
+            ? new Vector3(-1, 1, 1)
+            : Vector3.one;
+
+        // =========================
+        // color
+        // =========================
+        Color c = md.player ? Color.black : Color.red;
+
+        foreach (var r in obj.GetComponentsInChildren<SpriteRenderer>())
+        {
+            r.color = c;
+        }
+
+        return obj;
+    }
+
+    public void LoadMoveData(MoveData md)
+    {
+        // ストック減少処理
+        Board.instance.DecrementStock(md.player, md.pieceType);
+        GameObject obj = CreatePiece(md);
+        if (md.pieceType == PieceType.P)
+        {
+            mm.AddPDict(md, obj);
+        }
+        // マップ登録
+        mm.ApplyAdd(md);
+        Board.instance.Change();
+    }
+    public void LoadMoveDataList(List<MoveData> moveList)
+    {
+        for (int i = 0; i < moveList.Count; i++)
+        {
+            LoadMoveData(moveList[i]);
+        }
+    }
+
+    public void Reset()
+    {
+        // MdMapリセット
+        mm.Reset();
+        // Stockリセット
+        Board.instance.ResetStock();
+        // 古いContainer削除
+        if (pieceContainer != null)
+        {
+            Destroy(pieceContainer);
+        }
+
+        // 新しいEmpty生成
+        pieceContainer = new GameObject("PieceContainer");
+    }
+
+    public void LoadMoveDataFromIndex(List<MoveData> moveList, int index)
+    {
+        if (index >= 0 && index < moveList.Count)
+        {
+            Reset();
+            LoadMoveDataList(moveList.GetRange(0, index + 1));
+        }
+    }
+
+    public void TestLoad2()
+    {
+        LoadMoveDataFromIndex(mdList, 2);
+    }
+    public void TestLoad()
+    {
+        LoadMoveDataList(mdList2);
+    }
+    List<MoveData> mdList = new List<MoveData>
+        {
+            new MoveData
+            {
+                turn = 0,
+                player = false,
+                pieceType = PieceType.P,
+                rotation = 180,
+                flipped = false,
+                x = 26,
+                y = 1,
+                touchdown = false
+            },
+            new MoveData
+            {
+                turn = 0,
+                player = true,
+                pieceType = PieceType.P,
+                rotation = 0,
+                flipped = false,
+                x = 14,
+                y = 28,
+                touchdown = false
+            },
+            new MoveData
+            {
+                turn = 0,
+                player = false,
+                pieceType = PieceType.W,
+                rotation = 270,
+                flipped = false,
+                x = 27,
+                y = 4,
+                touchdown = false
+            },
+            new MoveData
+            {
+                turn = 0,
+                player = true,
+                pieceType = PieceType.V,
+                rotation = 0,
+                flipped = false,
+                x = 15,
+                y = 25,
+                touchdown = false
+            },
+            new MoveData
+            {
+                turn = 0,
+                player = false,
+                pieceType = PieceType.V,
+                rotation = 90,
+                flipped = false,
+                x = 30,
+                y = 6,
+                touchdown = false
+            },
+            new MoveData
+            {
+                turn = 0,
+                player = true,
+                pieceType = PieceType.V,
+                rotation = 180,
+                flipped = false,
+                x = 18,
+                y = 23,
+                touchdown = false
+            }
+        };
+    List<MoveData> mdList2 = new List<MoveData>
+    {
+        new MoveData
+        {
+            turn = 0,
+            player = false,
+            pieceType = PieceType.P,
+            rotation = 180,
+            flipped = false,
+            x = 32,
+            y = 1,
+            touchdown = false
+        },
+        new MoveData
+        {
+            turn = 0,
+            player = false,
+            pieceType = PieceType.N,
+            rotation = 0,
+            flipped = false,
+            x = 33,
+            y = 4,
+            touchdown = false
+        },
+        new MoveData
+        {
+            turn = 0,
+            player = false,
+            pieceType = PieceType.Y,
+            rotation = 0,
+            flipped = false,
+            x = 33,
+            y = 9,
+            touchdown = false
+        },
+        new MoveData
+        {
+            turn = 0,
+            player = false,
+            pieceType = PieceType.I,
+            rotation = 0,
+            flipped = false,
+            x = 33,
+            y = 13,
+            touchdown = false
+        },
+        new MoveData
+        {
+            turn = 0,
+            player = false,
+            pieceType = PieceType.I,
+            rotation = 0,
+            flipped = false,
+            x = 33,
+            y = 18,
+            touchdown = false
+        },
+        new MoveData
+        {
+            turn = 0,
+            player = true,
+            pieceType = PieceType.P,
+            rotation = 0,
+            flipped = false,
+            x = 15,
+            y = 28,
+            touchdown = false
+        },
+        new MoveData
+        {
+            turn = 0,
+            player = false,
+            pieceType = PieceType.I,
+            rotation = 0,
+            flipped = false,
+            x = 33,
+            y = 23,
+            touchdown = false
+        },
+        new MoveData
+        {
+            turn = 0,
+            player = true,
+            pieceType = PieceType.X,
+            rotation = 0,
+            flipped = false,
+            x = 15,
+            y = 25,
+            touchdown = false
+        },
+        new MoveData
+        {
+            turn = 0,
+            player = false,
+            pieceType = PieceType.W,
+            rotation = 270,
+            flipped = false,
+            x = 34,
+            y = 27,
+            touchdown = false
+        },
+        new MoveData
+        {
+            turn = 0,
+            player = true,
+            pieceType = PieceType.X,
+            rotation = 0,
+            flipped = false,
+            x = 15,
+            y = 22,
+            touchdown = false
+        }
+    };
+
+}
