@@ -79,7 +79,23 @@ public class Board : MonoBehaviour
         // =========================
         int pieceIndex = 0;
 
-        foreach (PieceType type in System.Enum.GetValues(typeof(PieceType)))
+    List<PieceType> pieceTypes = new List<PieceType>
+    {
+        PieceType.F,
+        PieceType.I,
+        PieceType.L,
+        PieceType.N,
+        PieceType.T,
+        PieceType.U,
+        PieceType.V,
+        PieceType.W,
+        PieceType.X,
+        PieceType.Y,
+        PieceType.Z,
+        PieceType.P
+    };
+
+        foreach (PieceType type in pieceTypes)
         {
             if (!imageDict.TryGetValue(type, out GameObject imagePrefab))
             {

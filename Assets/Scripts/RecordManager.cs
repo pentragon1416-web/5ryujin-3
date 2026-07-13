@@ -8,7 +8,9 @@ public class RecordManager : MonoBehaviour
 
     string FilePath()
     {
-        return Path.Combine(Application.persistentDataPath, "record.json");
+        string p = Path.Combine(Application.persistentDataPath, "record.json");
+        Debug.Log(p);
+        return p;
     }
 
     // =========================
