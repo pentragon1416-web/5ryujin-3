@@ -114,6 +114,15 @@ public class Board : MonoBehaviour
             st.isFirstPlayer = true;
             st.image = imagePrefab;
 
+            if(type == PieceType.P)
+            {
+                st.GenerateButton(Color.black);
+            }
+            else
+            {
+                st.GenerateButton(Color.white);
+            }
+
             // stockDictに追加
             stockDict[(true, type)] = st;
 
@@ -130,6 +139,15 @@ public class Board : MonoBehaviour
             st.isFirstPlayer = false;
             st.image = imagePrefab;
 
+            if(type == PieceType.P)
+            {
+                st.GenerateButton(Color.red);
+            }
+            else
+            {
+                st.GenerateButton(Color.white);
+            }
+
             // stockDictに追加
             stockDict[(false, type)] = st;
 
@@ -139,6 +157,7 @@ public class Board : MonoBehaviour
             {
                 firstPlayerIButton = t;
             }
+            
 
             pieceIndex++;
         }
