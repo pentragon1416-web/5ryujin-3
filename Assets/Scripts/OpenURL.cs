@@ -12,10 +12,10 @@ public class OpenURL : MonoBehaviour
 
     public void Open()
     {
-    #if UNITY_WEBGL && !UNITY_EDITOR
-            OpenNewTab(url);
-    #else
-            Application.OpenURL(url);
-    #endif
+        #if UNITY_WEBGL && !UNITY_EDITOR
+                OpenNewTab(url);
+        #else
+                Application.OpenURL(url);
+        #endif
     }
 }
