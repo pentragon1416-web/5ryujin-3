@@ -4153,8 +4153,8 @@ MonoBehaviour:
   canvas: {fileID: 1639661655}
   turnText: {fileID: 226626661}
   tmp: {fileID: 1648269577}
-  goHomeButton: {fileID: 0}
-  pc: {fileID: 0}
+  goHomeButton: {fileID: 1780613355}
+  pc: {fileID: 1624130202}
   images:
   - type: 0
     image: {fileID: 2788692057035301855, guid: d8bf2d114914a8148b9f2249aef72036, type: 3}
@@ -4287,6 +4287,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1780613355 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7111114960330336222, guid: c6123ec838df6b047bb574953063354b, type: 3}
+  m_PrefabInstance: {fileID: 1934737661}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1800836104
 PrefabInstance:
   m_ObjectHideFlags: 0
