@@ -1545,18 +1545,18 @@ PrefabInstance:
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 11104015}
+      objectReference: {fileID: 583410904}
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Open
+      value: PutButton
       objectReference: {fileID: 0}
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: OpenURL, Assembly-CSharp
+      value: NetworkPieceCursor, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
@@ -6984,18 +6984,18 @@ PrefabInstance:
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 583410904}
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: 
+      value: PutButton
       objectReference: {fileID: 0}
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: PieceCursor, Assembly-CSharp
+      value: NetworkPieceCursor, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
