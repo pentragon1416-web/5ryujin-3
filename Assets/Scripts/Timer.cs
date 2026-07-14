@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class Timer : MonoBehaviour
 {
     public static int limit = 30;
+    public static bool stop = false;
 
     [SerializeField] Image image;
     public static float counter = 0;
@@ -25,6 +26,7 @@ public class Timer : MonoBehaviour
 
     void Update()
     {
+        if(stop) return;
         // 再現モードなら毎フレーム強制（←重要）
         ApplyLimit();
 
@@ -127,6 +129,16 @@ public class Timer : MonoBehaviour
             counter = 0;
             passCounter = 0;
         }
+    }
+
+    public static void StopCounter()
+    {
+        stop = true;
+    }
+
+    public static void StartCounter()
+    {
+        stop = false;
     }
 
     public void Skip(bool p)

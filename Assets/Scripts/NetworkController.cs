@@ -6,6 +6,7 @@ using Fusion;
 public class NetworkController : NetworkBehaviour
 {
     [Networked] public int timerLimit { get; set; }
+    [Networked] public bool master { get; set; }
     private NetworkPieceCursor networkPieceCursor;
     private Timer timer;
     private MessageController messageController;
@@ -24,6 +25,11 @@ public class NetworkController : NetworkBehaviour
     public void SetMessageController(MessageController controller)
     {
         messageController = controller;
+    }
+
+    public void SetMaster(bool m)
+    {
+        master = m;
     }
     // 共有中必要もの
     public void PutButton()
