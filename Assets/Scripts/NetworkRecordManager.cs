@@ -11,7 +11,7 @@ public class NetworkRecordManager : NetworkBehaviour
     public NetworkArray<NetworkMoveData> Moves => default;
 
     [Networked]
-    public int MoveCount { get; set; }
+    public int MoveCount  { get; set; }
     [Networked]
     public bool Turn { get; set; }
     public override void Spawned()
@@ -20,6 +20,7 @@ public class NetworkRecordManager : NetworkBehaviour
         {
             MoveCount = 0;
         }
+        moveDataLoader.LoadMoveDataList(GetMoveDataList());
     }
 
     [Rpc(RpcSources.All, RpcTargets.All)]
@@ -58,6 +59,18 @@ public class NetworkRecordManager : NetworkBehaviour
     public bool GetTurn()
     {
         return Turn;
+    }
+
+    public List<MoveData> GetMoveDataList()
+    {
+        List<MoveData> moveList = new List<MoveData>(MoveCount);
+
+        for (int i = 0; i < MoveCount; i++)
+        {
+            moveList.Add(Moves.Get(i).ToMoveData());
+        }
+
+        return moveList;
     }
 
     public bool CanAdd(MoveData md)

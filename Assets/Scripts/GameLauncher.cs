@@ -219,7 +219,9 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         }
         messageController.HideMessageAfterDelay(1f);
         networkPieceCursor.StartGame();
-        Board.instance.ChangeTo(false);
+
+        // ここは他のプレイヤー復帰した場合はルームに残っていた方のターンになります。
+        Board.instance.ChangeTo(networkController.master);
     }
 
     private void InitializeAsUpper()
