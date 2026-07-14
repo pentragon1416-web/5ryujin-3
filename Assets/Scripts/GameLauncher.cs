@@ -128,6 +128,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         // 二人目が来たときにbool値をtrueにしてループ解除
         if (runner.ActivePlayers.Count() == 2)
         {
+            messageController.HideMessage();
             shouldStartGame = true;
         }
         StartCoroutine(WaitForNetworkRecordManager());
@@ -228,6 +229,13 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
+        if (runner.IsSharedModeMasterClient)
+        {
+            networkRecordManager.Object.RequestStateAuthority();
+            networkController.Object.RequestStateAuthority();
+            upperNetworkCursorTracker.Object.RequestStateAuthority();
+            lowerNetworkCursorTracker.Object.RequestStateAuthority();
+        }
         messageController.ShowMessageWithGoTitleButton("left...");
     }
 
