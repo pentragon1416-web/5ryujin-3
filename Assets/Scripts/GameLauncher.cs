@@ -203,7 +203,8 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         {
             yield return null;
         }
-        Timer.StartCounter();
+        // Timer.StartCounter();
+        Timer.ResetCounter();
     }
 
     private void InitializeGame()
