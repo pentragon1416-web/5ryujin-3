@@ -205,7 +205,6 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         if (!pausingPlayer)
         {
             turn = !networkController.GetMaster();
-            Debug.LogError("交代しました！！");
         }
         pausingPlayer = false;
         InitializeGame();

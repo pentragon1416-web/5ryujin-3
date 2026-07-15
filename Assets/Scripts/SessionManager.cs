@@ -36,6 +36,11 @@ public class SessionManager : MonoBehaviour
     {
         this.Settings.turnTime = t;
     }
+
+    public string GetRoomNumber()
+    {
+        return Settings.roomNumber;
+    }
 }
 
 public struct RoomSettings

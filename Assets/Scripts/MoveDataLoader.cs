@@ -38,12 +38,14 @@ public class MoveDataLoader : MonoBehaviour
                 Debug.LogWarning($"Duplicate PieceType: {e.type}");
             }
         }
-    }
 
-    void Start()
-    {
         mm = new MdMap(pieceDatabase);
     }
+
+    // void Start()
+    // {
+    //     mm = new MdMap(pieceDatabase);
+    // }
     public GameObject CreatePiece(MoveData md)
     {
         // プレハブ取得
