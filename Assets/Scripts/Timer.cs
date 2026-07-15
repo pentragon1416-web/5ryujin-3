@@ -124,6 +124,7 @@ public class Timer : MonoBehaviour
 
     public static void ResetCounter()
     {
+        stop = false;
         if (counter != 0)
         {
             counter = 0;

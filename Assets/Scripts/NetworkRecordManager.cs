@@ -11,7 +11,7 @@ public class NetworkRecordManager : NetworkBehaviour
     public NetworkArray<NetworkMoveData> Moves => default;
 
     [Networked]
-    public int MoveCount  { get; set; }
+    public int MoveCount { get; set; }
     [Networked]
     public bool Turn { get; set; }
     public override void Spawned()

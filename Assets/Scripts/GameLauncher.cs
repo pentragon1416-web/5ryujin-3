@@ -34,6 +34,8 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     private NetworkCursorTracker lowerNetworkCursorTracker;
     private bool isInitialized;
     private bool shouldStartGame = false;
+    private bool turn = true;
+    private bool pausingPlayer = false;
 
     private async void Start()
     {
@@ -70,6 +72,11 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     // ----------------------------
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
+        // すでにInitializeした方はもう実行しない。
+        if(isInitialized) {
+            networkController.RpcSetMaster(networkPieceCursor.myTurn);
+            return;
+        };
         Debug.Log($"Player joined. Active players: {runner.ActivePlayers.Count()}");
 
         // ホスト（SharedModeMasterClient）だけが生成する
@@ -122,12 +129,13 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
             networkRecordManager = obj.GetComponent<NetworkRecordManager>();
             networkPieceCursor.enabled = false;
-            networkController.SetMaster(false);
+            networkController.RpcSetMaster(false);
+            turn = false;
+            pausingPlayer = true;
         }
         // 二人目が来たとき、ゲーム途中への入室でbool値をtrueにしてループ解除
         if (runner.ActivePlayers.Count() == 2)
         {
-            messageController.HideMessage();
             shouldStartGame = true;
         }
         StartCoroutine(WaitForNetworkRecordManager());
@@ -179,8 +187,10 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
         if (isInitialized)
             yield break;
-
         isInitialized = true;
+
+        // オブジェクトが同期されても、変数が同期されないのでいったん待機。
+        yield return new WaitForSeconds(1f);
 
         Debug.Log("Game initialized with 2 players. Starting game...");
 
@@ -191,26 +201,25 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         networkController.SetNetworkPieceCursor(networkPieceCursor);
         networkController.SetTimer(timer);
         networkController.SetMessageController(messageController);
-        networkController.RpcResetCounter();
         gameUIForNetwork.SetNetworkController(networkController);
-        InitializeGame();
-    }
-
-    private IEnumerator Pause()
-    {
-        // shouldStartGameがtrueになるまで待機
-        while (!shouldStartGame)
+        if (!pausingPlayer)
         {
-            yield return null;
+            turn = !networkController.GetMaster();
+            Debug.LogError("交代しました！！");
         }
-        // Timer.StartCounter();
-        Timer.ResetCounter();
+        pausingPlayer = false;
+        InitializeGame();
+        // ここではじめでも途中でもStateAuthorityを持っている側が初期化
+        networkController.RpcResetCounter();
+        networkController.RpcApplyTimerLimit();
+        networkController.RpcBoardChangeTo(networkController.GetMaster());
+        networkController.RpcHideMessage();
     }
 
     private void InitializeGame()
     {
         // 1Pの方がfalseなので!を使っています。
-        if (!networkController.master)
+        if (!turn)
         {
             InitializeAsLower();
         }
@@ -246,28 +255,27 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         upperNetworkCursorTracker.gameObject.SetActive(true);
         lowerNetworkCursorTracker.gameObject.SetActive(false);
         messageController.ShowMessage("Lower!");
-        networkController.RpcApplyTimerLimit();
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
-        if (runner.IsSharedModeMasterClient)
-        {
-            networkRecordManager.Object.RequestStateAuthority();
-            networkController.Object.RequestStateAuthority();
-            upperNetworkCursorTracker.Object.RequestStateAuthority();
-            lowerNetworkCursorTracker.Object.RequestStateAuthority();
-        }
-
-        // 残っているプレイヤーが自動的にStateAuthorityを持つので自分のターンをnetowrkControllerのmasterに登録する。
-        bool m = networkPieceCursor.myTurn;
-        networkController.SetMaster(m);
+        // 待機画面の用意
         messageController.ShowMessageWithGoTitleButton("left...");
         shouldStartGame = false;
+        // ルームに残ったプレイヤーへの権限の譲渡
+        networkRecordManager.Object.RequestStateAuthority();
+        networkController.Object.RequestStateAuthority();
+        upperNetworkCursorTracker.Object.RequestStateAuthority();
+        lowerNetworkCursorTracker.Object.RequestStateAuthority();
 
-        // 次のプレイヤーが車でタイマーをリセットし続けるようにする。
+        // // 残っているプレイヤーが自動的にStateAuthorityを持つので自分のターンをnetowrkControllerのmasterに登録する。
+        // bool m = networkPieceCursor.myTurn;
+        // networkController.RpcSetMaster(m);
+        // messageController.ShowMessageWithGoTitleButton($"I am {networkController.master}");
+
+        // 次のプレイヤーが来るまでタイマーをリセットし続けるようにする。
         Timer.StopCounter();
-        StartCoroutine(Pause());
+        pausingPlayer = true;
     }
 
     public void OnInput(NetworkRunner runner, NetworkInput input) { }

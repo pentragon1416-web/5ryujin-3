@@ -26,11 +26,6 @@ public class NetworkController : NetworkBehaviour
     {
         messageController = controller;
     }
-
-    public void SetMaster(bool m)
-    {
-        master = m;
-    }
     // 共有中必要もの
     public void PutButton()
     {
@@ -47,10 +42,20 @@ public class NetworkController : NetworkBehaviour
         networkPieceCursor.FlipButton();
     }
 
+    public bool GetMaster()
+    {
+        return master;
+    }
+
     [Rpc(RpcSources.All, RpcTargets.All)]
     public void RpcBoardGiveUp(int i)
     {
         Board.instance.Giveup(i);
+    }
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void RpcBoardChangeTo(bool t)
+    {
+        Board.instance.ChangeTo(t);
     }
 
     [Rpc(RpcSources.All, RpcTargets.All)]
@@ -63,6 +68,7 @@ public class NetworkController : NetworkBehaviour
     public void RpcResetCounter()
     {
         Timer.ResetCounter();
+        Timer.StartCounter();
     }
     [Rpc(RpcSources.All, RpcTargets.All)]
     public void RpcShowMessage(string msg)
@@ -94,5 +100,10 @@ public class NetworkController : NetworkBehaviour
     public void RpcApplyTimerLimit()
     {
         Timer.limit = timerLimit;
+    }
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void RpcSetMaster(bool m)
+    {
+        master = m;
     }
 }
