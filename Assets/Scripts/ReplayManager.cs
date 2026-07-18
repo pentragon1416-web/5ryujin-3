@@ -8,6 +8,7 @@ public class ReplayManager : MonoBehaviour
     public List<MoveData> moveDataList;
     public int currentIndex = -1;
     private int listLength = 0;
+    private bool isInitialized = false;
     void OnEnable()
     {
         List<MoveData> mdList2 = new List<MoveData>
@@ -130,6 +131,7 @@ public class ReplayManager : MonoBehaviour
         currentIndex = -1;
         moveDataList = list;
         listLength = list.Count;
+        isInitialized = true;
     }
 
 
@@ -170,9 +172,22 @@ public class ReplayManager : MonoBehaviour
     {
         SceneManager.LoadScene("HomeScene");
     }
+
     public void ReplayFromIndex(int index)
     {
         currentIndex = index;
         moveDataLoader.LoadMoveDataFromIndex(moveDataList, index);
+    }
+
+    public int GetCurrentIndex(){
+        return currentIndex;
+    }
+
+    public int GetListLength(){
+        return listLength;
+    }
+
+    public bool Initialized(){
+        return isInitialized;
     }
 }
