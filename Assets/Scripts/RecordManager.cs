@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using UnityEngine;
 
+// RecordManagerはとにかくデータベースのアクセスのみを役割とする。
 public class RecordManager : MonoBehaviour
 {
     public GameRecord record = new GameRecord();
