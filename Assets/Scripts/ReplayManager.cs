@@ -8,7 +8,7 @@ public class ReplayManager : MonoBehaviour
     public List<MoveData> moveDataList;
     public int currentIndex = 0;
     private int listLength = 0;
-    void Start()
+    void OnEnable()
     {
         List<MoveData> mdList2 = new List<MoveData>
     {
@@ -123,19 +123,18 @@ public class ReplayManager : MonoBehaviour
             touchdown = false
         }
     };
-        SetMoveDataList(mdList2);
+    SetMoveDataList(mdList2);
     }
     public void SetMoveDataList(List<MoveData> list)
     {
         moveDataList = list;
         listLength = list.Count;
-        moveDataLoader.LoadMoveDataFromIndex(moveDataList, 0);
     }
 
 
     public void Next()
     {
-        if (currentIndex >= 0 && currentIndex < listLength)
+        if (currentIndex < listLength-1)
         {
             currentIndex++;
             moveDataLoader.LoadMoveDataFromIndex(moveDataList, currentIndex);
@@ -144,7 +143,7 @@ public class ReplayManager : MonoBehaviour
 
     public void Prev()
     {
-        if (currentIndex >= 0 && currentIndex < listLength)
+        if (currentIndex > 0)
         {
             currentIndex--;
             moveDataLoader.LoadMoveDataFromIndex(moveDataList, currentIndex);

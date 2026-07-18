@@ -36,7 +36,7 @@ public class Board : MonoBehaviour
     private Dictionary<(bool, PieceType), Stock> stockDict;
     private bool isJudged = false;
 
-    void Start()
+    void Awake()
     {
         turn = false;
         instance = this;
