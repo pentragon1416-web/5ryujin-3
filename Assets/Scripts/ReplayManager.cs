@@ -6,7 +6,7 @@ public class ReplayManager : MonoBehaviour
 {
     public MoveDataLoader moveDataLoader;
     public List<MoveData> moveDataList;
-    public int currentIndex = 0;
+    public int currentIndex = -1;
     private int listLength = 0;
     void OnEnable()
     {
@@ -139,21 +139,29 @@ public class ReplayManager : MonoBehaviour
             currentIndex++;
             moveDataLoader.LoadMoveDataFromIndex(moveDataList, currentIndex);
         }
+
     }
 
     public void Prev()
     {
-        if (currentIndex > 0)
+        if (currentIndex > -1)
         {
             currentIndex--;
-            moveDataLoader.LoadMoveDataFromIndex(moveDataList, currentIndex);
+            if(currentIndex == -1)
+            {
+                moveDataLoader.Reset();
+            }
+            else
+            {
+                moveDataLoader.LoadMoveDataFromIndex(moveDataList, currentIndex);
+            }
         }
     }
 
     public void ResetReplay()
     {
-        currentIndex = 0;
-        moveDataLoader.LoadMoveDataFromIndex(moveDataList, 0);
+        currentIndex = -1;
+        moveDataLoader.Reset();
     }
 
     public void GoHome()

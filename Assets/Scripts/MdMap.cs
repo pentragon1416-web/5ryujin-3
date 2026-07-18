@@ -125,6 +125,11 @@ public class MdMap
     /// <summary>
     /// 判定が通った前提で、状態の更新処理（追加・削除・勝利判定など）を行います。
     /// </summary>
+    private static bool IsTouchdownMove(MoveData md)
+    {
+        return md != null && (md.touchdown || md.pieceType == PieceType.td);
+    }
+
     public void ApplyAdd(MoveData md)
     {
         PieceData pd = pieceDatabase.Get(md.pieceType);
@@ -183,7 +188,7 @@ public class MdMap
         }
 
         // 4. td（特定ゴマ）の場合の特殊処理、および勝敗判定
-        if (md.pieceType == PieceType.td)
+        if (IsTouchdownMove(md))
         {
             var p = pdict[(player, num)];
             p.go.SetActive(false);
@@ -375,7 +380,7 @@ public class MdMap
                 magnetMap.Add(t, (player, num));
             }
         }
-        if (md.pieceType == PieceType.td)
+        if (IsTouchdownMove(md))
         {
             //Debug.Log(0);
             var p = pdict[(player, num)];
