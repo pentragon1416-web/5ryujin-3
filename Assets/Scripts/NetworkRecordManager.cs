@@ -20,7 +20,14 @@ public class NetworkRecordManager : NetworkBehaviour
         {
             MoveCount = 0;
         }
+        StartCoroutine(Initialize());
+    }
+    IEnumerator Initialize()
+    {
+        // 0.5秒待機
+        yield return new WaitForSeconds(0.5f);
         moveDataLoader.LoadMoveDataList(GetMoveDataList());
+        // ここに遅延後の処理を書く
     }
 
     [Rpc(RpcSources.All, RpcTargets.All)]
