@@ -127,6 +127,7 @@ public class ReplayManager : MonoBehaviour
     }
     public void SetMoveDataList(List<MoveData> list)
     {
+        currentIndex = -1;
         moveDataList = list;
         listLength = list.Count;
     }
@@ -137,6 +138,7 @@ public class ReplayManager : MonoBehaviour
         if (currentIndex < listLength-1)
         {
             currentIndex++;
+            Debug.Log(currentIndex);
             moveDataLoader.LoadMoveDataFromIndex(moveDataList, currentIndex);
         }
 
