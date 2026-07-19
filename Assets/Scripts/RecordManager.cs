@@ -2,14 +2,51 @@ using System;
 using System.IO;
 using UnityEngine;
 
+// {
+//   "moves": [
+//     {
+//       "turn": 1,
+//       "player": true,
+//       "pieceType": 3,
+//       "rotation": 0,
+//       "flipped": false,
+//       "x": 4,
+//       "y": 5,
+//       "touchdown": false
+//     },
+//     {
+//       "turn": 2,
+//       "player": false,
+//       "pieceType": 6,
+//       "rotation": 1,
+//       "flipped": true,
+//       "x": 3,
+//       "y": 6,
+//       "touchdown": true
+//     }
+//   ]
+// }
+
 // RecordManagerはとにかくデータベースのアクセスのみを役割とする。
 public class RecordManager : MonoBehaviour
 {
     public GameRecord record = new GameRecord();
 
+    void Start(){
+        FilePath();
+    }
+
     string FilePath()
     {
         string p = Path.Combine(Application.persistentDataPath, "record.json");
+        if (!File.Exists(p))
+        {
+            // 空の GameRecord をJSON化して保存
+            string json = JsonUtility.ToJson(new GameRecord(), true);
+            File.WriteAllText(p, json);
+
+            Debug.Log("record.json を新規作成しました。");
+        }
         Debug.Log(p);
         return p;
     }
