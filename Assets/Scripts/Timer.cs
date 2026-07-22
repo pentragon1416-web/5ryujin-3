@@ -62,14 +62,16 @@ public class Timer : MonoBehaviour
     void ApplyLimit()
     {
         // 再現時はANL
-        if (KifuReplayContext.HasKifu())
+        // ここはGameRecordのモードをしらべてから分岐させる。
+        if (false)
         {
-            limit = 360000;
+            StopCounter();
+            // limit = 360000;
 
-            if (timelimit != null)
-            {
-                timelimit.text = "ANL";
-            }
+            // if (timelimit != null)
+            // {
+            //     timelimit.text = "ANL";
+            // }
 
             return;
         }
