@@ -5,6 +5,7 @@ using UnityEngine;
 // RecordManagerはとにかくデータベースのアクセスのみを役割とする。
 public class RecordManager : MonoBehaviour
 {
+    
 }
 
 // 旧
