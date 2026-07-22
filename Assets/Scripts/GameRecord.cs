@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 //シングルトンのMonoBehaviourにしてからシーンの間をたらいまわしすることで機能させる。
 
@@ -46,6 +47,7 @@ public static class GameRecord
     // moveDataList
     public static void AddMoveData(MoveData md)
     {
+        Debug.Log("GameRecordにMoveDataを追加しました。");
         moveDataList.Add(md);
     }
 

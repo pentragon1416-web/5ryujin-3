@@ -17,7 +17,7 @@ public class KifuListUI : MonoBehaviour
     {
         if(GameRecord.GetMode() == RecordMode.Record){
             // ここに記録するときの処理を書く。
-            GameRecord.ResetMoveDataList();
+            // GameRecord.ResetMoveDataList();
         }
         GameRecord.ChangeModeTo(RecordMode.Normal);
         CreateList();
