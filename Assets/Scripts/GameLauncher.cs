@@ -280,7 +280,27 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     public void OnInput(NetworkRunner runner, NetworkInput input) { }
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
 
-    public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
+    public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
+    {
+        shouldStartGame = false;
+        pausingPlayer = true;
+        isInitialized = false;
+        turn = false;
+
+        Timer.StopCounter();
+        Timer.ResetCounter();
+
+        if (messageController != null)
+        {
+            messageController.HideMessage();
+            messageController.ShowMessageWithGoTitleButton("Room closed...");
+        }
+
+        networkRecordManager = null;
+        networkController = null;
+        upperNetworkCursorTracker = null;
+        lowerNetworkCursorTracker = null;
+    }
     public void OnConnectedToServer(NetworkRunner runner) { }
     public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason) { }
 
