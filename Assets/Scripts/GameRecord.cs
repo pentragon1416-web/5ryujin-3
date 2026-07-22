@@ -44,7 +44,7 @@ public static class GameRecord
     }
 
     // moveDataList
-    public static void AddMoveDataList(MoveData md)
+    public static void AddMoveData(MoveData md)
     {
         moveDataList.Add(md);
     }

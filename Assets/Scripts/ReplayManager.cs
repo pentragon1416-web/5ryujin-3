@@ -124,8 +124,9 @@ public class ReplayManager : MonoBehaviour
             touchdown = false
         }
     };
-    SetMoveDataList(mdList2);
+    SetMoveDataList(GameRecord.GetMoveDataList());
     }
+
     public void SetMoveDataList(List<MoveData> list)
     {
         currentIndex = -1;

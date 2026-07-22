@@ -20,6 +20,7 @@ public class NetworkRecordManager : NetworkBehaviour
         {
             MoveCount = 0;
         }
+        GameRecord.ChangeModeTo(RecordMode.Record);
         StartCoroutine(Initialize());
     }
     IEnumerator Initialize()
@@ -41,6 +42,7 @@ public class NetworkRecordManager : NetworkBehaviour
 
         Moves.Set(MoveCount, moveData);
         moveDataLoader.LoadMoveData(moveData.ToMoveData());
+        GameRecord.AddMoveData(moveData.ToMoveData());
         MoveCount++;
     }
 
