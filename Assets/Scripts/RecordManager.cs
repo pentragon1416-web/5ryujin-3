@@ -2,181 +2,161 @@ using System;
 using System.IO;
 using UnityEngine;
 
-// {
-//   "moves": [
-//     {
-//       "turn": 1,
-//       "player": true,
-//       "pieceType": 3,
-//       "rotation": 0,
-//       "flipped": false,
-//       "x": 4,
-//       "y": 5,
-//       "touchdown": false
-//     },
-//     {
-//       "turn": 2,
-//       "player": false,
-//       "pieceType": 6,
-//       "rotation": 1,
-//       "flipped": true,
-//       "x": 3,
-//       "y": 6,
-//       "touchdown": true
-//     }
-//   ]
-// }
-
 // RecordManagerはとにかくデータベースのアクセスのみを役割とする。
 public class RecordManager : MonoBehaviour
 {
-    public GameRecord record = new GameRecord();
+}
 
-    void Start(){
-        FilePath();
-    }
+// 旧
+// public class RecordManager : MonoBehaviour
+// {
+    // public GameRecord record = new GameRecord();
 
-    string FilePath()
-    {
-        string p = Path.Combine(Application.persistentDataPath, "record.json");
-        if (!File.Exists(p))
-        {
-            // 空の GameRecord をJSON化して保存
-            string json = JsonUtility.ToJson(new GameRecord(), true);
-            File.WriteAllText(p, json);
+    // void Start(){
+    //     FilePath();
+    // }
 
-            Debug.Log("record.json を新規作成しました。");
-        }
-        Debug.Log(p);
-        return p;
-    }
+    // string FilePath()
+    // {
+    //     string p = Path.Combine(Application.persistentDataPath, "record.json");
+    //     if (!File.Exists(p))
+    //     {
+    //         // 空の GameRecord をJSON化して保存
+    //         string json = JsonUtility.ToJson(new GameRecord(), true);
+    //         File.WriteAllText(p, json);
+
+    //         Debug.Log("record.json を新規作成しました。");
+    //     }
+    //     Debug.Log(p);
+    //     return p;
+    // }
 
     // =========================
     // ★追加：次の棋譜番号を取得
     // KIF.001 ～ KIF.999
     // 999 の次は 001
     // =========================
-    int GetNextKifNumber()
-    {
-        int num = PlayerPrefs.GetInt("KIF_NO", 0);
+    // int GetNextKifNumber()
+    // {
+    //     int num = PlayerPrefs.GetInt("KIF_NO", 0);
 
-        num++;
+    //     num++;
 
-        if (num > 999)
-        {
-            num = 1;
-        }
+    //     if (num > 999)
+    //     {
+    //         num = 1;
+    //     }
 
-        PlayerPrefs.SetInt("KIF_NO", num);
-        PlayerPrefs.Save();
+    //     PlayerPrefs.SetInt("KIF_NO", num);
+    //     PlayerPrefs.Save();
 
-        return num;
-    }
+    //     return num;
+    // }
 
     // =========================
     // ★追加：KIF.001 形式の名前を作る
     // =========================
-    string GetKifName(int num)
-    {
-        return "KIF." + num.ToString("D3");
-    }
+    // string GetKifName(int num)
+    // {
+    //     return "KIF." + num.ToString("D3");
+    // }
 
     // =========================
     // 手の記録
     // =========================
-    public void AddMove(
-        PieceType pieceType,
-        int rotation,
-        bool flipped,
-        int x,
-        int y,
-        bool player,
-        bool touchdown
-    )
-    {
-        MoveData move = new MoveData();
+    // public void AddMove(
+    //     PieceType pieceType,
+    //     int rotation,
+    //     bool flipped,
+    //     int x,
+    //     int y,
+    //     bool player,
+    //     bool touchdown
+    // )
+    // {
+    //     MoveData move = new MoveData();
 
-        move.turn = record.moves.Count + 1;
-        move.player = player;
-        move.pieceType = pieceType;
-        move.rotation = rotation;
-        move.flipped = flipped;
-        move.x = x;
-        move.y = y;
-        move.touchdown = touchdown;
+    //     move.turn = record.moves.Count + 1;
+    //     move.player = player;
+    //     move.pieceType = pieceType;
+    //     move.rotation = rotation;
+    //     move.flipped = flipped;
+    //     move.x = x;
+    //     move.y = y;
+    //     move.touchdown = touchdown;
 
-        record.moves.Add(move);
-    }
+    //     record.moves.Add(move);
+    // }
 
     // =========================
     // record.json 保存（従来）
     // =========================
-    public void SaveRecord()
-    {
-        string json = JsonUtility.ToJson(record, true);
-        File.WriteAllText(FilePath(), json);
-        Debug.Log("棋譜保存(record.json): " + FilePath());
-    }
+    // public void SaveRecord()
+    // {
+    //     string json = JsonUtility.ToJson(record, true);
+    //     File.WriteAllText(FilePath(), json);
+    //     Debug.Log("棋譜保存(record.json): " + FilePath());
+    // }
 
     // =========================
     // record.json 読込（従来）
     // =========================
-    public void LoadRecord()
-    {
-        string path = FilePath();
+    // public void LoadRecord()
+    // {
+    //     string path = FilePath();
 
-        if (File.Exists(path))
-        {
-            string json = File.ReadAllText(path);
-            record = JsonUtility.FromJson<GameRecord>(json);
-            Debug.Log("棋譜読込: " + path);
-        }
-        else
-        {
-            Debug.LogWarning("棋譜ファイルがありません: " + path);
-        }
-    }
+    //     if (File.Exists(path))
+    //     {
+    //         string json = File.ReadAllText(path);
+    //         record = JsonUtility.FromJson<GameRecord>(json);
+    //         Debug.Log("棋譜読込: " + path);
+    //     }
+    //     else
+    //     {
+    //         Debug.LogWarning("棋譜ファイルがありません: " + path);
+    //     }
+    // }
 
     // =========================
     // 記録クリア
     // =========================
-    public void ClearRecord()
-    {
-        record = new GameRecord();
-    }
+    // public void ClearRecord()
+    // {
+    //     record = new GameRecord();
+    // }
 
     // =========================
     // 棋譜として保存（KifuManager連携）
     // Recクリック時に KIF.001 ～ KIF.999 で保存
     // =========================
-    public void SaveAsKifu()
-    {
-        // 安全チェック
-        if (record == null || record.moves == null || record.moves.Count == 0)
-        {
-            Debug.LogWarning("保存する棋譜がありません");
-            return;
-        }
+    // public void SaveAsKifu()
+    // {
+    //     // 安全チェック
+    //     if (record == null || record.moves == null || record.moves.Count == 0)
+    //     {
+    //         Debug.LogWarning("保存する棋譜がありません");
+    //         return;
+    //     }
 
-        if (KifuManager.instance == null)
-        {
-            Debug.LogError("KifuManager が存在しません");
-            return;
-        }
+    //     if (KifuManager.instance == null)
+    //     {
+    //         Debug.LogError("KifuManager が存在しません");
+    //         return;
+    //     }
 
-        // 名前（KIF.001 ～ KIF.999 + 日時）
-        int kifNo = GetNextKifNumber();
+    //     // 名前（KIF.001 ～ KIF.999 + 日時）
+    //     int kifNo = GetNextKifNumber();
 
-        string dateText = DateTime.Now.ToString("yyyy/MM/dd");
-        string name = GetKifName(kifNo) + "  " + dateText;
+    //     string dateText = DateTime.Now.ToString("yyyy/MM/dd");
+    //     string name = GetKifName(kifNo) + "  " + dateText;
 
-        // 参照コピーを防ぐために JSON 経由でコピー
-        string json = JsonUtility.ToJson(record);
-        GameRecord copy = JsonUtility.FromJson<GameRecord>(json);
+    //     // 参照コピーを防ぐために JSON 経由でコピー
+    //     string json = JsonUtility.ToJson(record);
+    //     GameRecord copy = JsonUtility.FromJson<GameRecord>(json);
 
-        // 保存
-        KifuManager.instance.SaveKifu(name, copy);
+    //     // 保存
+    //     KifuManager.instance.SaveKifu(name, copy);
 
-        Debug.Log("棋譜保存(Kifu): " + name + " 手数=" + copy.moves.Count);
-    }
-}
+    //     Debug.Log("棋譜保存(Kifu): " + name + " 手数=" + copy.moves.Count);
+    // }
+// }

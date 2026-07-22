@@ -216,19 +216,6 @@ public class PieceCursor : MonoBehaviour
         // Debug.Log($"mm.AddFromMd(md) = {mm.AddFromMd(md)}");
         if (moveDataLoader.mm.CanAdd(md))
         {
-            if (recordManager != null)
-            {
-                recordManager.AddMove(
-                    pieceType: pieceType,
-                    rotation: rotation,
-                    flipped: flipped,
-                    x: x,
-                    y: y,
-                    player: player,
-                    touchdown: touchdown
-                );
-                recordManager.SaveRecord();
-            }
             Trash();
             moveDataList.Add(md);
             moveDataLoader.LoadMoveData(md);
