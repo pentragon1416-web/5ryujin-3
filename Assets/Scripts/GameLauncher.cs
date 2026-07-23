@@ -58,6 +58,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
     private async void LeaveRoom()
     {
+
         if (runner != null)
         {
             runner.RemoveCallbacks(this);
