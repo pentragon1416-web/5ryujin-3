@@ -5,6 +5,7 @@ using System.Linq;
 using Fusion;
 using Fusion.Sockets;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -39,6 +40,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     private bool shouldStartGame = false;
     private bool turn = true;
     private bool pausingPlayer = false;
+    private bool isLeaving = false;
 
     private async void Start()
     {
@@ -59,10 +61,18 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         messageController.ShowMessageWithGoTitleButton("Matching...");
     }
 
-    private async void LeaveRoom()
+    public void LeaveRoom()
+    {
+        if(isLeaving) return;
+        isLeaving = true;
+        CleanupNetworkSession().Forget();
+    }
+
+    private async UniTask CleanupNetworkSession()
     {
         if(networkLeaveHandle == null) return;
         networkLeaveHandle.RpcSendStateAuthority();
+        await UniTask.Delay(100);
         if (runner != null)
         {
             runner.RemoveCallbacks(this);
