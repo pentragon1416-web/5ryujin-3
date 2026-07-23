@@ -4597,6 +4597,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1312663102}
   - component: {fileID: 1312663101}
+  - component: {fileID: 1312663103}
   m_Layer: 0
   m_Name: GameLauncher
   m_TagString: Untagged
@@ -4623,10 +4624,13 @@ MonoBehaviour:
     RawGuidValue: 2188e104d32a3c848bc7f592a469c8fa
   networkCursorTrackerPrefab:
     RawGuidValue: ef5dd6d5dc527a24a950043f19d6c834
+  networkLeaveHandlePrefab:
+    RawGuidValue: 43e7f3c15a2ed8b4ba89c3d86a68a555
   networkPieceCursor: {fileID: 583410904}
   gameUIForNetwork: {fileID: 72266327}
   timer: {fileID: 1173701267}
   messageController: {fileID: 1862112259}
+  sceneLoader: {fileID: 1312663103}
   LowerTD: {fileID: 2083665525}
   LowerGU: {fileID: 788128680}
   LowerPass: {fileID: 1048338671}
@@ -4648,6 +4652,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1312663103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1312663100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51f221c2b078ab14eacf01b94af5ec3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1314908682
 GameObject:
   m_ObjectHideFlags: 0

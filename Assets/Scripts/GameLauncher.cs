@@ -61,7 +61,8 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
     private async void LeaveRoom()
     {
-
+        if(networkLeaveHandle == null) return;
+        networkLeaveHandle.RpcSendStateAuthority();
         if (runner != null)
         {
             runner.RemoveCallbacks(this);
@@ -69,6 +70,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             Destroy(runner.gameObject);
             runner = null;
         }
+        sceneLoader.LoadHomeScene();
     }
 
     public void TakeOverStateAuthority()
