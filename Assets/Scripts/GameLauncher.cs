@@ -56,7 +56,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         messageController.ShowMessageWithGoTitleButton("Matching...");
     }
 
-    private async void OnDestroy()
+    private async void LeaveRoom()
     {
         if (runner != null)
         {
@@ -65,6 +65,14 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             Destroy(runner.gameObject);
             runner = null;
         }
+    }
+
+    public void TakeOverStateAuthority()
+    {
+        networkRecordManager.Object.RequestStateAuthority();
+        networkController.Object.RequestStateAuthority();
+        upperNetworkCursorTracker.Object.RequestStateAuthority();
+        lowerNetworkCursorTracker.Object.RequestStateAuthority();
     }
 
     // ----------------------------
@@ -261,11 +269,6 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         // 待機画面の用意
         messageController.ShowMessageWithGoTitleButton("left...");
         shouldStartGame = false;
-        // ルームに残ったプレイヤーへの権限の譲渡
-        networkRecordManager.Object.RequestStateAuthority();
-        networkController.Object.RequestStateAuthority();
-        upperNetworkCursorTracker.Object.RequestStateAuthority();
-        lowerNetworkCursorTracker.Object.RequestStateAuthority();
 
         // // 残っているプレイヤーが自動的にStateAuthorityを持つので自分のターンをnetowrkControllerのmasterに登録する。
         // bool m = networkPieceCursor.myTurn;
@@ -282,24 +285,6 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
-        shouldStartGame = false;
-        pausingPlayer = true;
-        isInitialized = false;
-        turn = false;
-
-        Timer.StopCounter();
-        Timer.ResetCounter();
-
-        if (messageController != null)
-        {
-            messageController.HideMessage();
-            messageController.ShowMessageWithGoTitleButton("Room closed...");
-        }
-
-        networkRecordManager = null;
-        networkController = null;
-        upperNetworkCursorTracker = null;
-        lowerNetworkCursorTracker = null;
     }
     public void OnConnectedToServer(NetworkRunner runner) { }
     public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason) { }
