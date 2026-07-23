@@ -12,12 +12,14 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] private NetworkPrefabRef networkRecordManagerPrefab;
     [SerializeField] private NetworkPrefabRef networkControllerPrefab;
     [SerializeField] private NetworkPrefabRef networkCursorTrackerPrefab;
+    [SerializeField] private NetworkPrefabRef networkLeaveHandlePrefab;
 
     [Header("ローカルセッティング用")]
     [SerializeField] private NetworkPieceCursor networkPieceCursor;
     [SerializeField] private GameUIForNetwork gameUIForNetwork;
     [SerializeField] private Timer timer;
     [SerializeField] private MessageController messageController;
+    [SerializeField] private SceneLoader sceneLoader;
     [Header("下側から")]
     [SerializeField] private GameObject LowerTD;
     [SerializeField] private GameObject LowerGU;
@@ -32,6 +34,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     private NetworkController networkController;
     private NetworkCursorTracker upperNetworkCursorTracker;
     private NetworkCursorTracker lowerNetworkCursorTracker;
+    private NetworkLeaveHandle networkLeaveHandle;
     private bool isInitialized;
     private bool shouldStartGame = false;
     private bool turn = true;
@@ -74,6 +77,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         networkController.Object.RequestStateAuthority();
         upperNetworkCursorTracker.Object.RequestStateAuthority();
         lowerNetworkCursorTracker.Object.RequestStateAuthority();
+        networkLeaveHandle.Object.RequestStateAuthority();
     }
 
     // ----------------------------
@@ -125,6 +129,15 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
                 onBeforeSpawned: null,
                 flags: NetworkSpawnFlags.SharedModeStateAuthMasterClient
             );
+
+            var leaveHandleObj = runner.Spawn(
+                networkLeaveHandlePrefab,
+                Vector3.zero,
+                Quaternion.identity,
+                inputAuthority: null,
+                onBeforeSpawned: null,
+                flags: NetworkSpawnFlags.SharedModeStateAuthMasterClient
+            );
             networkController = controllerObj.GetComponent<NetworkController>();
             networkController.RpcSetTimerLimit(SessionManager.Instance.Settings.turnTime);
             upperNetworkCursorTracker = upperCursorTrackerObj.GetComponent<NetworkCursorTracker>();
@@ -135,6 +148,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             lowerNetworkCursorTracker.RpcSetCursorTrackerType(CursorTrackerType.Lower);
             lowerNetworkCursorTracker.RpcSetForPlayer(false);
             lowerNetworkCursorTracker.gameObject.SetActive(false);
+            networkLeaveHandle = leaveHandleObj.GetComponent<NetworkLeaveHandle>();
 
             networkRecordManager = obj.GetComponent<NetworkRecordManager>();
             networkPieceCursor.enabled = false;
@@ -193,6 +207,11 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
             yield return null;
         }
+        while (networkLeaveHandle == null)
+        {
+            networkLeaveHandle = FindFirstObjectByType<NetworkLeaveHandle>();
+            yield return null;
+        }
 
         if (isInitialized)
             yield break;
@@ -222,6 +241,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         networkController.RpcApplyTimerLimit();
         networkController.RpcBoardChangeTo(networkController.GetMaster());
         networkController.RpcHideMessage();
+        networkLeaveHandle.SetGameLauncher(this);
     }
 
     private void InitializeGame()
