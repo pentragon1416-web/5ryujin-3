@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 
@@ -85,6 +83,7 @@ public class DatabaseManager : MonoBehaviour
 
         return await loadTcs.Task;
 #else
+        await UniTask.CompletedTask;
         return null;
 #endif
     }
@@ -100,6 +99,7 @@ public class DatabaseManager : MonoBehaviour
 
         return await loadListTcs.Task;
 #else
+        await UniTask.CompletedTask;
         return null;
 #endif
     }
