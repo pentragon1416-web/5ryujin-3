@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System.Runtime.InteropServices;
 using Cysharp.Threading.Tasks;
 
 public class DatabaseManager : MonoBehaviour
@@ -33,16 +34,16 @@ public class DatabaseManager : MonoBehaviour
 #if UNITY_WEBGL && !UNITY_EDITOR
 
     [DllImport("__Internal")]
-    private extern void OpenDatabase();
+    private static extern void OpenDatabase();
 
     [DllImport("__Internal")]
-    private extern void SaveRecord(string json);
+    private static extern void SaveRecord(string json);
 
     [DllImport("__Internal")]
-    private extern void LoadRecord(string id);
+    private static extern void LoadRecord(string id);
 
     [DllImport("__Internal")]
-    private extern void LoadRecordList();
+    private static extern void LoadRecordList();
 
 #endif
 

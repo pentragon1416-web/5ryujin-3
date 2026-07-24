@@ -40,6 +40,10 @@ public static class GameRecord
         return name;
     }
 
+    public static string GetDate(){
+        return date;
+    }
+
     public static RecordMode GetMode(){
         return mode;
     }

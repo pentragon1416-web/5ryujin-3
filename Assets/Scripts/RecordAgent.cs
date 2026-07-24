@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 
@@ -32,9 +33,7 @@ public class RecordAgent : MonoBehaviour
                 await UniTask.CompletedTask;
             break;
         }
-        if (GameRecord.GetMode() == RecordMode.Record)
-        {
-        }
+        await BuildKifuUI();
     }
 
     private async UniTask ForRecord()
@@ -49,11 +48,14 @@ public class RecordAgent : MonoBehaviour
         {
             moves = GameRecord.GetMoveDataList()
         };
+        List<RecordSummary> rsList = await DatabaseManager.Instance.LoadRecordSummaryListAsync();
+        GameRecord.UpdateDate();
+        GameRecord.SetId($"KIFU_{rsList.Count}");
 
         Record record = new Record
         {
             id = GameRecord.GetId(),
-            name = GameRecord.GetName(),
+            name = GameRecord.GetDate(),
             mdList = JsonUtility.ToJson(moveDataList)
         };
 
@@ -68,5 +70,11 @@ public class RecordAgent : MonoBehaviour
     private async UniTask ForReplay()
     {
         await UniTask.CompletedTask;
+    }
+
+    private async UniTask BuildKifuUI()
+    {
+        List<RecordSummary> rsList = await DatabaseManager.Instance.LoadRecordSummaryListAsync();
+        kifuListUI.CreateList(rsList);
     }
 }

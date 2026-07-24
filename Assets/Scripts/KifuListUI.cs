@@ -14,10 +14,6 @@ public class KifuListUI : MonoBehaviour
     [Header("移動先のMainシーン名")]
     public string mainSceneName = "MainScene";
 
-    void Start()
-    {
-    }
-
     public void CreateList(List<RecordSummary> recordSummaries)
     {
         foreach (RecordSummary recordSummary in recordSummaries)
