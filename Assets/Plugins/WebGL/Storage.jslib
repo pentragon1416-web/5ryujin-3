@@ -43,4 +43,37 @@ mergeInto(LibraryManager.library, {
       }
     };
   },
+
+  LoadRecordList: function () {
+    const tx = window.gameDB.transaction(["Records"], "readonly");
+    const store = tx.objectStore("Records");
+
+    const request = store.openCursor();
+
+    const records = [];
+
+    request.onsuccess = function (e) {
+      const cursor = e.target.result;
+
+      if (cursor) {
+        records.push({
+          id: cursor.value.id,
+          name: cursor.value.name,
+        });
+
+        cursor.continue();
+      } else {
+        // Unityへ一覧を返す
+        const json = JSON.stringify({
+          records: records,
+        });
+
+        SendMessage("DatabaseManager", "OnRecordListLoaded", json);
+      }
+    };
+
+    request.onerror = function () {
+      console.error("Record一覧取得失敗");
+    };
+  },
 });

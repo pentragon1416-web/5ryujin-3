@@ -8,16 +8,21 @@ public class DatabaseManager : MonoBehaviour
 
     private Record currentRecord;
 
+    private List<RecordSummary> rsList;
+
 #if UNITY_WEBGL && !UNITY_EDITOR
 
     [DllImport("__Internal")]
-    private static extern void OpenDatabase();
+    private extern void OpenDatabase();
 
     [DllImport("__Internal")]
-    private static extern void SaveRecord(string json);
+    private extern void SaveRecord(string json);
 
     [DllImport("__Internal")]
-    private static extern void LoadRecord(string id);
+    private extern void LoadRecord(string id);
+
+    [DllImport("__Internal")]
+    private extern void LoadRecordList();
 
 #endif
 
@@ -46,9 +51,25 @@ public class DatabaseManager : MonoBehaviour
 #endif
     }
 
+    public void LoadRecordSummaryList()
+    {
+#if UNITY_WEBGL && !UNITY_EDITOR
+
+        LoadRecordList();
+#endif
+    }
+
     public void OnRecordLoaded(string json)
     {
         currentRecord = JsonUtility.FromJson<Record>(json);
+    }
+
+    public void OnRecordListLoaded(string json)
+    {
+        RecordSummaryList wrapper =
+            JsonUtility.FromJson<RecordSummaryList>(json);
+
+        rsList = wrapper.records;
     }
 
     public string GetCurrentId()
@@ -69,11 +90,27 @@ public class DatabaseManager : MonoBehaviour
         MoveDataList moveDataList =
             JsonUtility.FromJson<MoveDataList>(currentRecord.mdList);
 
-        List<MoveData> moves = moveDataList.moves;
-
-        return moves;
+        return moveDataList.moves;
     }
 
+    public List<RecordSummary> GetRecordList()
+    {
+        return rsList;
+    }
+}
+
+// 一覧を取得するためのラッパークラス
+[System.Serializable]
+public class RecordSummary
+{
+    public string id;
+    public string name;
+}
+
+[System.Serializable]
+public class RecordSummaryList
+{
+    public List<RecordSummary> records;
 }
 
 // 最終的にはここでまとめて保存。
