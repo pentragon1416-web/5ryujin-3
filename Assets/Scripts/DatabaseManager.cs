@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
-public static class DatabaseManager
+public class DatabaseManager : MonoBehaviour
 {
 
-    public static Record currentRecord;
+    private Record currentRecord;
 
 #if UNITY_WEBGL && !UNITY_EDITOR
 
@@ -21,14 +21,14 @@ public static class DatabaseManager
 
 #endif
 
-    public static void Initialize()
+    public void Initialize()
     {
 #if UNITY_WEBGL && !UNITY_EDITOR
         OpenDatabase();
 #endif
     }
 
-    public static void Save(Record record)
+    public void Save(Record record)
     {
 #if UNITY_WEBGL && !UNITY_EDITOR
 
@@ -38,13 +38,42 @@ public static class DatabaseManager
 #endif
     }
 
-    public static void Load(string id)
+    public void Load(string id)
     {
 #if UNITY_WEBGL && !UNITY_EDITOR
 
         LoadRecord(id);
 #endif
     }
+
+    public void OnRecordLoaded(string json)
+    {
+        currentRecord = JsonUtility.FromJson<Record>(json);
+    }
+
+    public string GetCurrentId()
+    {
+        return currentRecord?.id;
+    }
+
+    public string GetCurrentName()
+    {
+        return currentRecord?.name;
+    }
+
+    public List<MoveData> GetCurrentMdList()
+    {
+        if (currentRecord == null)
+            return null;
+
+        MoveDataList moveDataList =
+            JsonUtility.FromJson<MoveDataList>(currentRecord.mdList);
+
+        List<MoveData> moves = moveDataList.moves;
+
+        return moves;
+    }
+
 }
 
 // 最終的にはここでまとめて保存。

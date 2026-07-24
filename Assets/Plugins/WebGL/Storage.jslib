@@ -39,7 +39,7 @@ mergeInto(LibraryManager.library, {
         const json = JSON.stringify(request.result);
 
         // Unityへ返す処理
-        SendMessage("DatabaseReceiver", "OnRecordLoaded", json);
+        SendMessage("DatabaseManager", "OnRecordLoaded", json);
       }
     };
   },
