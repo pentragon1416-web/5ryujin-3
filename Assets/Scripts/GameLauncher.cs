@@ -58,8 +58,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             IsOpen = true,
             IsVisible = true
         });
-        messageController.ShowMessageWithGoTitleButton("Matching...");
-        messageController.HideGoTitleButton();
+        messageController.ShowMessage("Matching...");
     }
 
     public void LeaveRoom()

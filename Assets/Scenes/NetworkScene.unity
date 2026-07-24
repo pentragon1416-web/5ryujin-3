@@ -2207,7 +2207,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &625095995
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3497,10 +3497,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 165a6d8233a1d1145a2431e750511b64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedKifu:
-    name: 
-    record:
-      moves: []
 --- !u!4 &938097479
 Transform:
   m_ObjectHideFlags: 0
