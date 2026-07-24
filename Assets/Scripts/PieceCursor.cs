@@ -27,9 +27,6 @@ public class PieceCursor : MonoBehaviour
 
     public Color32 color1p;
     public Color32 color2p;
-
-    [Header("棋譜記録")]
-    public RecordManager recordManager;
     [Header("PieceDatabase")]
     public PieceDatabase pieceDatabase;
     [Header("MoveDataLoader")]

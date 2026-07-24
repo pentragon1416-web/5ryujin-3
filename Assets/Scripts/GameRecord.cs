@@ -15,7 +15,7 @@ public static class GameRecord
 
     public static void UpdateDate()
     {
-        string updateDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        string updateDate = DateTime.Now.ToString("yyyy-MM-dd");
         date = updateDate;
     }
 
@@ -49,6 +49,11 @@ public static class GameRecord
     {
         Debug.Log("GameRecordにMoveDataを追加しました。");
         moveDataList.Add(md);
+    }
+
+    public static void SetMoveDataList(List<MoveData> mdList)
+    {
+        moveDataList = mdList;
     }
 
     public static void ResetMoveDataList(){

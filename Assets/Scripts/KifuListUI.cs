@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Cysharp.Threading.Tasks;
 
 public class KifuListUI : MonoBehaviour
 {
@@ -15,19 +16,13 @@ public class KifuListUI : MonoBehaviour
 
     void Start()
     {
-        if(GameRecord.GetMode() == RecordMode.Record){
-            // ここに記録するときの処理を書く。
-            // GameRecord.ResetMoveDataList();
-        }
-        GameRecord.ChangeModeTo(RecordMode.Normal);
-        CreateList();
     }
 
-    void CreateList()
+    public void CreateList(List<RecordSummary> recordSummaries)
     {
-        for (int i = 0; i < 3; i++)
+        foreach (RecordSummary recordSummary in recordSummaries)
         {
-            CreateRecordButton("KIF.010", "2026/07/11");
+            CreateRecordButton(recordSummary.id, recordSummary.name);
         }
     }
 
@@ -43,12 +38,40 @@ public class KifuListUI : MonoBehaviour
         {
             Debug.LogError("buttonPrefab に Button コンポーネントがありません。");
             return;
-        }   
+        }
 
         btn.onClick.AddListener(() =>
         {
-            // ここにGameRecordの記録を入れる。
-            SceneManager.LoadScene(mainSceneName);
+            LoadRecordAsync(id).Forget();
         });
+    }
+
+    private async UniTask LoadRecordAsync(string id)
+    {
+        if (DatabaseManager.Instance == null)
+        {
+            Debug.LogError("DatabaseManager が見つからないため、棋譜を読み込めません。");
+            return;
+        }
+
+        try
+        {
+            await DatabaseManager.Instance.InitializeAsync();
+            Record record = await DatabaseManager.Instance.LoadAsync(id);
+            MoveDataList moveDataList = JsonUtility.FromJson<MoveDataList>(record.mdList);
+
+            GameRecord.ResetMoveDataList();
+
+            if (moveDataList?.moves != null)
+            {
+                GameRecord.SetMoveDataList(moveDataList.moves);
+            }
+
+            SceneManager.LoadScene(mainSceneName);
+        }
+        catch (System.Exception exception)
+        {
+            Debug.LogError($"棋譜の読み込みに失敗しました: {exception.Message}");
+        }
     }
 }
