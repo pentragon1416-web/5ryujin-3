@@ -59,18 +59,20 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             IsVisible = true
         });
         messageController.ShowMessageWithGoTitleButton("Matching...");
+        messageController.HideGoTitleButton();
     }
 
     public void LeaveRoom()
     {
+        // 必ず一度だけ作動するようにする。
         if(isLeaving) return;
-        isLeaving = true;
         CleanupNetworkSession().Forget();
     }
 
     private async UniTask CleanupNetworkSession()
     {
         if(networkLeaveHandle == null) return;
+        isLeaving = true;
         networkLeaveHandle.RpcSendStateAuthority();
         await UniTask.Delay(100);
         if (runner != null)
@@ -167,6 +169,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             networkController.RpcSetMaster(false);
             turn = false;
             pausingPlayer = true;
+            messageController.ShowGoTitleButton();
         }
         // 二人目が来たとき、ゲーム途中への入室でbool値をtrueにしてループ解除
         if (runner.ActivePlayers.Count() == 2)
