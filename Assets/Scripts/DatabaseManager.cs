@@ -6,9 +6,22 @@ using UnityEngine;
 public class DatabaseManager : MonoBehaviour
 {
 
+    public static DatabaseManager Instance { get; private set; }
     private Record currentRecord;
 
     private List<RecordSummary> rsList;
+
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
 
 #if UNITY_WEBGL && !UNITY_EDITOR
 
