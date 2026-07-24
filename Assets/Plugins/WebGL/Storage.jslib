@@ -1,79 +1,136 @@
 mergeInto(LibraryManager.library, {
-  OpenDatabase: function () {
-    const request = indexedDB.open("GameDB", 1);
+  OpenDatabase: async function () {
+    try {
+      window.gameDB = await new Promise((resolve, reject) => {
+        const request = indexedDB.open("GameDB", 1);
 
-    request.onupgradeneeded = function (e) {
-      const db = e.target.result;
+        request.onupgradeneeded = function (e) {
+          const db = e.target.result;
 
-      if (!db.objectStoreNames.contains("Records")) {
-        db.createObjectStore("Records", {
-          keyPath: "id",
-        });
-      }
-    };
+          if (!db.objectStoreNames.contains("Records")) {
+            db.createObjectStore("Records", {
+              keyPath: "id",
+            });
+          }
+        };
 
-    request.onsuccess = function (e) {
-      window.gameDB = e.target.result;
-    };
+        request.onsuccess = function (e) {
+          resolve(e.target.result);
+        };
+
+        request.onerror = function () {
+          reject(request.error);
+        };
+      });
+
+      console.log("データベースオープン成功");
+      SendMessage("DatabaseManager", "OnDatabaseOpened");
+    } catch (e) {
+      console.error("データベースオープン失敗", e);
+    }
   },
 
-  SaveRecord: function (jsonPtr) {
+  SaveRecord: async function (jsonPtr) {
     const json = UTF8ToString(jsonPtr);
-
     const record = JSON.parse(json);
 
-    const tx = window.gameDB.transaction(["Records"], "readwrite");
+    try {
+      await new Promise((resolve, reject) => {
+        const tx = window.gameDB.transaction(["Records"], "readwrite");
 
-    tx.objectStore("Records").put(record);
+        tx.objectStore("Records").put(record);
+
+        tx.oncomplete = function () {
+          resolve();
+        };
+
+        tx.onerror = function () {
+          reject(tx.error);
+        };
+
+        tx.onabort = function () {
+          reject(tx.error);
+        };
+      });
+
+      console.log("保存完了");
+      SendMessage("DatabaseManager", "OnRecordSaved");
+    } catch (e) {
+      console.error("保存失敗", e);
+      SendMessage("DatabaseManager", "OnRecordSaveFailed");
+    }
   },
 
-  LoadRecord: function (idPtr) {
+  LoadRecord: async function (idPtr) {
     const id = UTF8ToString(idPtr);
 
-    const tx = window.gameDB.transaction(["Records"], "readonly");
+    try {
+      const record = await new Promise((resolve, reject) => {
+        const tx = window.gameDB.transaction(["Records"], "readonly");
 
-    const request = tx.objectStore("Records").get(id);
+        const request = tx.objectStore("Records").get(id);
 
-    request.onsuccess = function () {
-      if (request.result) {
-        const json = JSON.stringify(request.result);
+        request.onsuccess = function () {
+          resolve(request.result);
+        };
 
-        // Unityへ返す処理
+        request.onerror = function () {
+          reject(request.error);
+        };
+      });
+
+      if (record) {
+        const json = JSON.stringify(record);
         SendMessage("DatabaseManager", "OnRecordLoaded", json);
+      } else {
+        console.log("レコードが見つかりません");
+        SendMessage("DatabaseManager", "OnRecordNotFound");
       }
-    };
+    } catch (e) {
+      console.error("読み込み失敗", e);
+      SendMessage("DatabaseManager", "OnRecordLoadFailed");
+    }
   },
 
-  LoadRecordList: function () {
-    const tx = window.gameDB.transaction(["Records"], "readonly");
-    const store = tx.objectStore("Records");
+  LoadRecordList: async function () {
+    try {
+      const records = await new Promise((resolve, reject) => {
+        const tx = window.gameDB.transaction(["Records"], "readonly");
+        const store = tx.objectStore("Records");
 
-    const request = store.openCursor();
+        const request = store.openCursor();
 
-    const records = [];
+        const records = [];
 
-    request.onsuccess = function (e) {
-      const cursor = e.target.result;
+        request.onsuccess = function (e) {
+          const cursor = e.target.result;
 
-      if (cursor) {
-        records.push({
-          id: cursor.value.id,
-          name: cursor.value.name,
-        });
+          if (cursor) {
+            records.push({
+              id: cursor.value.id,
+              name: cursor.value.name,
+            });
 
-        cursor.continue();
-      } else {
-        // Unityへ一覧を返す
-        const json = JSON.stringify({
-          records: records,
-        });
+            cursor.continue();
+          } else {
+            // 全件取得完了
+            resolve(records);
+          }
+        };
 
-        SendMessage("DatabaseManager", "OnRecordListLoaded", json);
-      }
-    };
+        request.onerror = function () {
+          reject(request.error);
+        };
+      });
 
-    request.onerror = function () {
-      console.error("Record一覧取得失敗");
-    };
+      const json = JSON.stringify({
+        records: records,
+      });
+
+      SendMessage("DatabaseManager", "OnRecordListLoaded", json);
+    } catch (e) {
+      console.error("Record一覧取得失敗", e);
+      SendMessage("DatabaseManager", "OnRecordListLoadFailed");
+    }
   },
 });
