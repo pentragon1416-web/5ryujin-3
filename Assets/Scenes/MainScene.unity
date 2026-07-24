@@ -5379,8 +5379,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19a142cf47550ef47b3b763009a81c85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  record:
-    moves: []
 --- !u!4 &1910646976
 Transform:
   m_ObjectHideFlags: 0
@@ -5446,18 +5444,18 @@ PrefabInstance:
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1934737663}
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: GoHome
+      value: LoadHomeScene
       objectReference: {fileID: 0}
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: ReplayManager, Assembly-CSharp
+      value: SceneLoader, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 34135862755132466, guid: c6123ec838df6b047bb574953063354b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
@@ -5587,13 +5585,28 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7860267949319770680, guid: c6123ec838df6b047bb574953063354b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 453284771}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7111114960330336222, guid: c6123ec838df6b047bb574953063354b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1934737663}
   m_SourcePrefab: {fileID: 100100000, guid: c6123ec838df6b047bb574953063354b, type: 3}
 --- !u!224 &1934737662 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7860267949319770680, guid: c6123ec838df6b047bb574953063354b, type: 3}
   m_PrefabInstance: {fileID: 1934737661}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1934737663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1780613355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51f221c2b078ab14eacf01b94af5ec3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2007288998
 PrefabInstance:
   m_ObjectHideFlags: 0
