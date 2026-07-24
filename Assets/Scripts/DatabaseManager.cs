@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 public class DatabaseManager : MonoBehaviour
 {
@@ -10,6 +11,14 @@ public class DatabaseManager : MonoBehaviour
     private Record currentRecord;
 
     private List<RecordSummary> rsList;
+
+    private UniTaskCompletionSource databaseOpenTcs;
+    private UniTaskCompletionSource savedTcs;
+    private UniTaskCompletionSource<Record> loadTcs;
+    private UniTaskCompletionSource<List<RecordSummary>> loadListTcs;
+
+    private bool isInitialized = false;
+    private bool isSaving = false;
 
     private void Awake()
     {
@@ -39,42 +48,113 @@ public class DatabaseManager : MonoBehaviour
 
 #endif
 
-    public void Initialize()
+    public async UniTask InitializeAsync()
     {
+        if(isInitialized) return;
 #if UNITY_WEBGL && !UNITY_EDITOR
+        databaseOpenTcs = new UniTaskCompletionSource();
         OpenDatabase();
+        await databaseOpenTcs.Task;
+#else
+        await UniTask.CompletedTask;
 #endif
+        isInitialized = true;
     }
 
-    public void Save(Record record)
+    public async UniTask SaveAsync(Record record)
     {
+        if(isSaving) return;
 #if UNITY_WEBGL && !UNITY_EDITOR
-
+        isSaving = true;
+        savedTcs = new UniTaskCompletionSource();
         string json = JsonUtility.ToJson(record);
         SaveRecord(json);
-
+        await savedTcs.Task;
+        isSaving = false;
+#else
+        await UniTask.CompletedTask;
 #endif
     }
 
-    public void Load(string id)
+    public async UniTask<Record> LoadAsync(string id)
     {
 #if UNITY_WEBGL && !UNITY_EDITOR
+        loadTcs = new UniTaskCompletionSource<Record>();
 
         LoadRecord(id);
+
+        return await loadTcs.Task;
+#else
+        return null;
 #endif
     }
 
-    public void LoadRecordSummaryList()
+    public async UniTask<List<RecordSummary>> LoadRecordSummaryListAsync()
     {
 #if UNITY_WEBGL && !UNITY_EDITOR
 
+        loadListTcs =
+            new UniTaskCompletionSource<List<RecordSummary>>();
+
         LoadRecordList();
+
+        return await loadListTcs.Task;
+#else
+        return null;
 #endif
+    }
+
+    // 以下Storage.jslibからのコールバックメソッド
+    public void OnDatabaseOpened()
+    {
+        databaseOpenTcs?.TrySetResult();
+    }
+
+    public void OnDatabaseOpenFailed()
+    {
+        databaseOpenTcs?.TrySetException(
+            new System.Exception("Database open failed")
+        );
+    }
+
+    public void OnRecordSaved()
+    {
+        savedTcs?.TrySetResult();
+    }
+
+    public void OnRecordSaveFailed()
+    {
+        savedTcs?.TrySetException(
+            new System.Exception("Record save failed"));
     }
 
     public void OnRecordLoaded(string json)
     {
-        currentRecord = JsonUtility.FromJson<Record>(json);
+        try
+        {
+            Record record =
+                JsonUtility.FromJson<Record>(json);
+            currentRecord = record;
+            loadTcs?.TrySetResult(record);
+        }
+        catch(System.Exception e)
+        {
+            loadTcs?.TrySetException(e);
+        }
+    }
+
+    public void OnRecordNotFound()
+    {
+        loadTcs?.TrySetException(
+            new System.Exception("Record not found")
+        );
+    }
+
+    public void OnRecordLoadFailed()
+    {
+        loadTcs?.TrySetException(
+            new System.Exception("Record load failed")
+        );
     }
 
     public void OnRecordListLoaded(string json)
@@ -83,6 +163,16 @@ public class DatabaseManager : MonoBehaviour
             JsonUtility.FromJson<RecordSummaryList>(json);
 
         rsList = wrapper.records;
+
+        loadListTcs?.TrySetResult(rsList);
+    }
+
+    // 以下取得用のメソッド
+    public void OnRecordListLoadFailed()
+    {
+        loadListTcs?.TrySetException(
+            new System.Exception("Record list load failed")
+        );
     }
 
     public string GetCurrentId()

@@ -27,10 +27,15 @@ mergeInto(LibraryManager.library, {
       SendMessage("DatabaseManager", "OnDatabaseOpened");
     } catch (e) {
       console.error("データベースオープン失敗", e);
+      SendMessage("DatabaseManager", "OnDatabaseOpenFailed");
     }
   },
 
   SaveRecord: async function (jsonPtr) {
+    if (!window.gameDB) {
+      SendMessage("DatabaseManager", "OnRecordSaveFailed");
+      return;
+    }
     const json = UTF8ToString(jsonPtr);
     const record = JSON.parse(json);
 
@@ -64,6 +69,11 @@ mergeInto(LibraryManager.library, {
   LoadRecord: async function (idPtr) {
     const id = UTF8ToString(idPtr);
 
+    if (!window.gameDB) {
+      SendMessage("DatabaseManager", "OnRecordLoadFailed");
+      return;
+    }
+
     try {
       const record = await new Promise((resolve, reject) => {
         const tx = window.gameDB.transaction(["Records"], "readonly");
@@ -96,6 +106,9 @@ mergeInto(LibraryManager.library, {
     try {
       const records = await new Promise((resolve, reject) => {
         const tx = window.gameDB.transaction(["Records"], "readonly");
+        tx.onerror = function () {
+          reject(tx.error);
+        };
         const store = tx.objectStore("Records");
 
         const request = store.openCursor();
