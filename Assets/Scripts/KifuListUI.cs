@@ -16,9 +16,14 @@ public class KifuListUI : MonoBehaviour
 
     public void CreateList(List<RecordSummary> recordSummaries)
     {
-        foreach (RecordSummary recordSummary in recordSummaries)
+        int length = recordSummaries.Count;
+        int count = 0;
+        for (int i = length - 1; i >= 0; i--)
         {
-            CreateRecordButton(recordSummary.id, recordSummary.name);
+            RecordSummary rs = recordSummaries[i];
+            CreateRecordButton(rs.id, rs.name);
+            count++;
+            if(count >= 6) break;
         }
     }
 

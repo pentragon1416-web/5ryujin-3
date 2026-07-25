@@ -9,9 +9,6 @@ public class RecordAgent : MonoBehaviour
     public KifuListUI kifuListUI;
     void Start()
     {
-#if !UNITY_WEBGL
-        return;
-#endif
         // これ一つだけを実行する。
         AsyncFunctions().Forget();
     }
@@ -25,18 +22,19 @@ public class RecordAgent : MonoBehaviour
         {
             case RecordMode.Record:
                 await ForRecord();
-            break;
+                break;
             case RecordMode.Normal:
                 await ForNormal();
-            break;
+                break;
             case RecordMode.Replay:
                 await ForReplay();
-            break;
+                break;
             default:
                 await UniTask.CompletedTask;
-            break;
+                break;
         }
         await BuildKifuUI();
+        GameRecord.ChangeModeTo(RecordMode.Normal);
     }
 
     private async UniTask ForRecord()
