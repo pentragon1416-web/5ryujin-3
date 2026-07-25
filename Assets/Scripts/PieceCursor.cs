@@ -27,9 +27,6 @@ public class PieceCursor : MonoBehaviour
 
     public Color32 color1p;
     public Color32 color2p;
-
-    [Header("棋譜記録")]
-    public RecordManager recordManager;
     [Header("PieceDatabase")]
     public PieceDatabase pieceDatabase;
     [Header("MoveDataLoader")]
@@ -216,19 +213,6 @@ public class PieceCursor : MonoBehaviour
         // Debug.Log($"mm.AddFromMd(md) = {mm.AddFromMd(md)}");
         if (moveDataLoader.mm.CanAdd(md))
         {
-            if (recordManager != null)
-            {
-                recordManager.AddMove(
-                    pieceType: pieceType,
-                    rotation: rotation,
-                    flipped: flipped,
-                    x: x,
-                    y: y,
-                    player: player,
-                    touchdown: touchdown
-                );
-                recordManager.SaveRecord();
-            }
             Trash();
             moveDataList.Add(md);
             moveDataLoader.LoadMoveData(md);

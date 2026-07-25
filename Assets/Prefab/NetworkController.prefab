@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e557691356a31f54ab0aa7a3d2aae7c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _timerLimit: 0
 --- !u!114 &3228976716462047156
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59,7 +60,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SortKey: 1616098481
   ObjectInterest: 1
-  Flags: 262145
+  Flags: 786433
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 6218075616125320377}

@@ -38,18 +38,37 @@ public class MoveDataLoader : MonoBehaviour
                 Debug.LogWarning($"Duplicate PieceType: {e.type}");
             }
         }
-    }
 
-    void Start()
-    {
         mm = new MdMap(pieceDatabase);
     }
+
+    // void Start()
+    // {
+    //     mm = new MdMap(pieceDatabase);
+    // }
+    private PieceType GetEffectivePieceType(MoveData md)
+    {
+        if (md == null)
+        {
+            return PieceType.td;
+        }
+
+        return md.touchdown && md.pieceType != PieceType.td ? PieceType.td : md.pieceType;
+    }
+
+    private bool IsTouchdownMove(MoveData md)
+    {
+        return md != null && (md.touchdown || md.pieceType == PieceType.td);
+    }
+
     public GameObject CreatePiece(MoveData md)
     {
+        PieceType effectivePieceType = GetEffectivePieceType(md);
+
         // プレハブ取得
-        if (!pieceDict.TryGetValue(md.pieceType, out GameObject prefab))
+        if (!pieceDict.TryGetValue(effectivePieceType, out GameObject prefab))
         {
-            Debug.LogError($"Prefab not found for {md.pieceType}");
+            Debug.LogError($"Prefab not found for {effectivePieceType} (original type: {md.pieceType}, touchdown: {md.touchdown})");
             return null;
         }
 
@@ -93,7 +112,11 @@ public class MoveDataLoader : MonoBehaviour
     public void LoadMoveData(MoveData md)
     {
         // ストック減少処理
-        Board.instance.DecrementStock(md.player, md.pieceType);
+        if (!IsTouchdownMove(md))
+        {
+            Board.instance.DecrementStock(md.player, md.pieceType);
+        }
+
         GameObject obj = CreatePiece(md);
         if (md.pieceType == PieceType.P)
         {

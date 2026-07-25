@@ -36,7 +36,7 @@ public class Board : MonoBehaviour
     private Dictionary<(bool, PieceType), Stock> stockDict;
     private bool isJudged = false;
 
-    void Start()
+    void Awake()
     {
         turn = false;
         instance = this;
@@ -79,7 +79,23 @@ public class Board : MonoBehaviour
         // =========================
         int pieceIndex = 0;
 
-        foreach (PieceType type in System.Enum.GetValues(typeof(PieceType)))
+    List<PieceType> pieceTypes = new List<PieceType>
+    {
+        PieceType.F,
+        PieceType.I,
+        PieceType.L,
+        PieceType.N,
+        PieceType.T,
+        PieceType.U,
+        PieceType.V,
+        PieceType.W,
+        PieceType.X,
+        PieceType.Y,
+        PieceType.Z,
+        PieceType.P
+    };
+
+        foreach (PieceType type in pieceTypes)
         {
             if (!imageDict.TryGetValue(type, out GameObject imagePrefab))
             {
@@ -98,6 +114,15 @@ public class Board : MonoBehaviour
             st.isFirstPlayer = true;
             st.image = imagePrefab;
 
+            if(type == PieceType.P)
+            {
+                st.GenerateButton(Color.black);
+            }
+            else
+            {
+                st.GenerateButton(Color.white);
+            }
+
             // stockDictに追加
             stockDict[(true, type)] = st;
 
@@ -114,6 +139,15 @@ public class Board : MonoBehaviour
             st.isFirstPlayer = false;
             st.image = imagePrefab;
 
+            if(type == PieceType.P)
+            {
+                st.GenerateButton(Color.red);
+            }
+            else
+            {
+                st.GenerateButton(Color.white);
+            }
+
             // stockDictに追加
             stockDict[(false, type)] = st;
 
@@ -123,6 +157,7 @@ public class Board : MonoBehaviour
             {
                 firstPlayerIButton = t;
             }
+            
 
             pieceIndex++;
         }

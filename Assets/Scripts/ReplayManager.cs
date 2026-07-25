@@ -4,179 +4,191 @@ using UnityEngine.SceneManagement;
 
 public class ReplayManager : MonoBehaviour
 {
-    [Header("PieceType → Prefab対応表")]
-    [SerializeField] private List<PiecePrefabPair> piecePrefabs = new List<PiecePrefabPair>();
-
-    [System.Serializable]
-    public struct PiecePrefabPair
+    public MoveDataLoader moveDataLoader;
+    public List<MoveData> moveDataList;
+    public int currentIndex = -1;
+    private int listLength = 0;
+    private bool isInitialized = false;
+    void OnEnable()
     {
-        public PieceType type;
-        public GameObject prefab;
+        List<MoveData> mdList2 = new List<MoveData>
+    {
+        new MoveData
+        {
+            turn = 0,
+            player = false,
+            pieceType = PieceType.P,
+            rotation = 180,
+            flipped = false,
+            x = 32,
+            y = 1,
+            touchdown = false
+        },
+        new MoveData
+        {
+            turn = 0,
+            player = false,
+            pieceType = PieceType.N,
+            rotation = 0,
+            flipped = false,
+            x = 33,
+            y = 4,
+            touchdown = false
+        },
+        new MoveData
+        {
+            turn = 0,
+            player = false,
+            pieceType = PieceType.Y,
+            rotation = 0,
+            flipped = false,
+            x = 33,
+            y = 9,
+            touchdown = false
+        },
+        new MoveData
+        {
+            turn = 0,
+            player = false,
+            pieceType = PieceType.I,
+            rotation = 0,
+            flipped = false,
+            x = 33,
+            y = 13,
+            touchdown = false
+        },
+        new MoveData
+        {
+            turn = 0,
+            player = false,
+            pieceType = PieceType.I,
+            rotation = 0,
+            flipped = false,
+            x = 33,
+            y = 18,
+            touchdown = false
+        },
+        new MoveData
+        {
+            turn = 0,
+            player = true,
+            pieceType = PieceType.P,
+            rotation = 0,
+            flipped = false,
+            x = 15,
+            y = 28,
+            touchdown = false
+        },
+        new MoveData
+        {
+            turn = 0,
+            player = false,
+            pieceType = PieceType.I,
+            rotation = 0,
+            flipped = false,
+            x = 33,
+            y = 23,
+            touchdown = false
+        },
+        new MoveData
+        {
+            turn = 0,
+            player = true,
+            pieceType = PieceType.X,
+            rotation = 0,
+            flipped = false,
+            x = 15,
+            y = 25,
+            touchdown = false
+        },
+        new MoveData
+        {
+            turn = 0,
+            player = false,
+            pieceType = PieceType.W,
+            rotation = 270,
+            flipped = false,
+            x = 34,
+            y = 27,
+            touchdown = false
+        },
+        new MoveData
+        {
+            turn = 0,
+            player = true,
+            pieceType = PieceType.X,
+            rotation = 0,
+            flipped = false,
+            x = 15,
+            y = 22,
+            touchdown = false
+        }
+    };
+    SetMoveDataList(GameRecord.GetMoveDataList());
     }
 
-    private Dictionary<PieceType, GameObject> prefabDict;
-
-    [Header("タッチダウン用P駒")]
-    public GameObject touchdownPrefab;
-
-    [Header("生成した駒を入れる親")]
-    public Transform replayParent;
-
-    [Header("駒の色")]
-    public Color32 color1p;
-    public Color32 color2p;
-
-    private GameRecord loadedKifu;
-    private List<GameObject> replayObjects = new List<GameObject>();
-    private Dictionary<bool, GameObject> startPObjects = new Dictionary<bool, GameObject>();
-
-    private int currentMoveIndex = 0;
-
-    void Start()
+    public void SetMoveDataList(List<MoveData> list)
     {
-        // ★辞書化
-        prefabDict = new Dictionary<PieceType, GameObject>();
-
-        foreach (var p in piecePrefabs)
-        {
-            if (p.prefab != null)
-            {
-                prefabDict[p.type] = p.prefab;
-            }
-            else
-            {
-                Debug.LogWarning($"Prefab未設定: {p.type}");
-            }
-        }
-
-        if (KifuReplayContext.HasKifu())
-        {
-            loadedKifu = KifuReplayContext.selectedKifu;
-            Debug.Log("棋譜を受け取りました。手数：" + loadedKifu.moves.Count);
-            ResetReplay();
-        }
-        else
-        {
-            Debug.LogWarning("再現する棋譜がありません。HOME画面から棋譜を選んでください。");
-        }
+        currentIndex = -1;
+        moveDataList = list;
+        listLength = list.Count;
+        isInitialized = true;
     }
+
 
     public void Next()
     {
-        if (loadedKifu == null) return;
-        if (currentMoveIndex >= loadedKifu.moves.Count) return;
+        if (currentIndex < listLength-1)
+        {
+            currentIndex++;
+            Debug.Log(currentIndex);
+            moveDataLoader.LoadMoveDataFromIndex(moveDataList, currentIndex);
+        }
 
-        currentMoveIndex++;
-        RebuildReplay();
     }
 
     public void Prev()
     {
-        if (loadedKifu == null) return;
-        if (currentMoveIndex <= 0) return;
-
-        currentMoveIndex--;
-        RebuildReplay();
+        if (currentIndex > -1)
+        {
+            currentIndex--;
+            if(currentIndex == -1)
+            {
+                moveDataLoader.Reset();
+            }
+            else
+            {
+                moveDataLoader.LoadMoveDataFromIndex(moveDataList, currentIndex);
+            }
+        }
     }
 
     public void ResetReplay()
     {
-        currentMoveIndex = 0;
-        ClearReplayObjects();
+        currentIndex = -1;
+        moveDataLoader.Reset();
     }
 
     public void GoHome()
     {
-        ResetReplay();
-        KifuReplayContext.Clear();
         SceneManager.LoadScene("HomeScene");
     }
 
-    void RebuildReplay()
+    public void ReplayFromIndex(int index)
     {
-        ClearReplayObjects();
-
-        for (int i = 0; i < currentMoveIndex; i++)
-        {
-            PlaceMove(loadedKifu.moves[i]);
-        }
+        currentIndex = index;
+        moveDataLoader.LoadMoveDataFromIndex(moveDataList, index);
     }
 
-    void ClearReplayObjects()
-    {
-        foreach (GameObject obj in replayObjects)
-        {
-            if (obj != null) Destroy(obj);
-        }
-
-        replayObjects.Clear();
-        startPObjects.Clear();
+    public int GetCurrentIndex(){
+        return currentIndex;
     }
 
-    void PlaceMove(MoveData move)
-    {
-        GameObject prefab = null;
+    public int GetListLength(){
+        return listLength;
+    }
 
-        // =========================
-        // タッチダウン
-        // =========================
-        if (move.touchdown)
-        {
-            if (startPObjects.ContainsKey(move.player))
-            {
-                GameObject startP = startPObjects[move.player];
-
-                if (startP != null)
-                {
-                    replayObjects.Remove(startP);
-                    Destroy(startP);
-                }
-
-                startPObjects.Remove(move.player);
-            }
-
-            prefab = touchdownPrefab;
-        }
-        else
-        {
-            PieceType type = move.pieceType;
-
-            if (!prefabDict.TryGetValue(type, out prefab))
-            {
-                Debug.LogError("未登録PieceType: " + type);
-                return;
-            }
-        }
-
-        if (prefab == null)
-        {
-            Debug.LogError("Prefabがnullです");
-            return;
-        }
-
-        Vector3 pos = new Vector3(move.x, move.y, -1f);
-
-        GameObject obj = Instantiate(prefab, pos, Quaternion.identity, replayParent);
-
-        obj.transform.rotation = Quaternion.Euler(
-            0,
-            move.flipped ? 180 : 0,
-            move.rotation
-        );
-
-        Color32 pieceColor = move.player ? color2p : color1p;
-
-        foreach (var sr in obj.GetComponentsInChildren<SpriteRenderer>())
-        {
-            sr.color = pieceColor;
-        }
-
-        replayObjects.Add(obj);
-
-        // P駒管理（必要なら残す）
-        if (!move.touchdown && move.pieceType == PieceType.P)
-        {
-            startPObjects[move.player] = obj;
-        }
+    public bool Initialized(){
+        return isInitialized;
     }
 }

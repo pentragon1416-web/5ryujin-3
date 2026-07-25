@@ -5,6 +5,7 @@ using System.Linq;
 using Fusion;
 using Fusion.Sockets;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -12,12 +13,14 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] private NetworkPrefabRef networkRecordManagerPrefab;
     [SerializeField] private NetworkPrefabRef networkControllerPrefab;
     [SerializeField] private NetworkPrefabRef networkCursorTrackerPrefab;
+    [SerializeField] private NetworkPrefabRef networkLeaveHandlePrefab;
 
     [Header("ローカルセッティング用")]
     [SerializeField] private NetworkPieceCursor networkPieceCursor;
     [SerializeField] private GameUIForNetwork gameUIForNetwork;
     [SerializeField] private Timer timer;
     [SerializeField] private MessageController messageController;
+    [SerializeField] private SceneLoader sceneLoader;
     [Header("下側から")]
     [SerializeField] private GameObject LowerTD;
     [SerializeField] private GameObject LowerGU;
@@ -32,9 +35,12 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     private NetworkController networkController;
     private NetworkCursorTracker upperNetworkCursorTracker;
     private NetworkCursorTracker lowerNetworkCursorTracker;
+    private NetworkLeaveHandle networkLeaveHandle;
     private bool isInitialized;
     private bool shouldStartGame = false;
-    private bool isHost = false;
+    private bool turn = true;
+    private bool pausingPlayer = false;
+    private bool isLeaving = false;
 
     private async void Start()
     {
@@ -52,11 +58,22 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             IsOpen = true,
             IsVisible = true
         });
-        messageController.ShowMessageWithGoTitleButton("Matching...");
+        messageController.ShowMessage("Matching...");
     }
 
-    private async void OnDestroy()
+    public void LeaveRoom()
     {
+        // 必ず一度だけ作動するようにする。
+        if(isLeaving) return;
+        CleanupNetworkSession().Forget();
+    }
+
+    private async UniTask CleanupNetworkSession()
+    {
+        if(networkLeaveHandle == null) return;
+        isLeaving = true;
+        networkLeaveHandle.RpcSendStateAuthority();
+        await UniTask.Delay(100);
         if (runner != null)
         {
             runner.RemoveCallbacks(this);
@@ -64,6 +81,16 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             Destroy(runner.gameObject);
             runner = null;
         }
+        sceneLoader.LoadHomeScene();
+    }
+
+    public void TakeOverStateAuthority()
+    {
+        networkRecordManager.Object.RequestStateAuthority();
+        networkController.Object.RequestStateAuthority();
+        upperNetworkCursorTracker.Object.RequestStateAuthority();
+        lowerNetworkCursorTracker.Object.RequestStateAuthority();
+        networkLeaveHandle.Object.RequestStateAuthority();
     }
 
     // ----------------------------
@@ -71,12 +98,16 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     // ----------------------------
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
+        // すでにInitializeした方はもう実行しない。
+        if(isInitialized) {
+            networkController.RpcSetMaster(networkPieceCursor.myTurn);
+            return;
+        };
         Debug.Log($"Player joined. Active players: {runner.ActivePlayers.Count()}");
 
         // ホスト（SharedModeMasterClient）だけが生成する
         if (runner.IsSharedModeMasterClient && networkRecordManager == null)
         {
-            isHost = true;
             var obj = runner.Spawn(
                 networkRecordManagerPrefab,
                 Vector3.zero,
@@ -111,6 +142,15 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
                 onBeforeSpawned: null,
                 flags: NetworkSpawnFlags.SharedModeStateAuthMasterClient
             );
+
+            var leaveHandleObj = runner.Spawn(
+                networkLeaveHandlePrefab,
+                Vector3.zero,
+                Quaternion.identity,
+                inputAuthority: null,
+                onBeforeSpawned: null,
+                flags: NetworkSpawnFlags.SharedModeStateAuthMasterClient
+            );
             networkController = controllerObj.GetComponent<NetworkController>();
             networkController.RpcSetTimerLimit(SessionManager.Instance.Settings.turnTime);
             upperNetworkCursorTracker = upperCursorTrackerObj.GetComponent<NetworkCursorTracker>();
@@ -121,11 +161,16 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             lowerNetworkCursorTracker.RpcSetCursorTrackerType(CursorTrackerType.Lower);
             lowerNetworkCursorTracker.RpcSetForPlayer(false);
             lowerNetworkCursorTracker.gameObject.SetActive(false);
+            networkLeaveHandle = leaveHandleObj.GetComponent<NetworkLeaveHandle>();
 
             networkRecordManager = obj.GetComponent<NetworkRecordManager>();
             networkPieceCursor.enabled = false;
+            networkController.RpcSetMaster(false);
+            turn = false;
+            pausingPlayer = true;
+            messageController.ShowGoTitleButton();
         }
-        // 二人目が来たときにbool値をtrueにしてループ解除
+        // 二人目が来たとき、ゲーム途中への入室でbool値をtrueにしてループ解除
         if (runner.ActivePlayers.Count() == 2)
         {
             shouldStartGame = true;
@@ -176,11 +221,18 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
             yield return null;
         }
+        while (networkLeaveHandle == null)
+        {
+            networkLeaveHandle = FindFirstObjectByType<NetworkLeaveHandle>();
+            yield return null;
+        }
 
         if (isInitialized)
             yield break;
-
         isInitialized = true;
+
+        // オブジェクトが同期されても、変数が同期されないのでいったん待機。
+        yield return new WaitForSeconds(1f);
 
         Debug.Log("Game initialized with 2 players. Starting game...");
 
@@ -191,50 +243,84 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         networkController.SetNetworkPieceCursor(networkPieceCursor);
         networkController.SetTimer(timer);
         networkController.SetMessageController(messageController);
-        networkController.RpcResetCounter();
         gameUIForNetwork.SetNetworkController(networkController);
+        if (!pausingPlayer)
+        {
+            turn = !networkController.GetMaster();
+        }
+        pausingPlayer = false;
         InitializeGame();
+        // ここではじめでも途中でもStateAuthorityを持っている側が初期化
+        networkController.RpcResetCounter();
+        networkController.RpcApplyTimerLimit();
+        networkController.RpcBoardChangeTo(networkController.GetMaster());
+        networkController.RpcHideMessage();
+        networkLeaveHandle.SetGameLauncher(this);
     }
 
     private void InitializeGame()
     {
-        if (isHost)
+        // 1Pの方がfalseなので!を使っています。
+        if (!turn)
         {
-            UpperTD.SetActive(false);
-            UpperGU.SetActive(false);
-            UpperPass.SetActive(false);
-            networkPieceCursor.SetMyTurn(false);
-            networkPieceCursor.SetCursorTracker(lowerNetworkCursorTracker);
-            upperNetworkCursorTracker.gameObject.SetActive(true);
-            lowerNetworkCursorTracker.gameObject.SetActive(false);
-            messageController.ShowMessage("Lower!");
-            networkController.RpcApplyTimerLimit();
+            InitializeAsLower();
         }
         else
         {
-            LowerTD.SetActive(false);
-            LowerGU.SetActive(false);
-            LowerPass.SetActive(false);
-            networkPieceCursor.SetMyTurn(true);
-            networkPieceCursor.SetCursorTracker(upperNetworkCursorTracker);
-            upperNetworkCursorTracker.gameObject.SetActive(false);
-            lowerNetworkCursorTracker.gameObject.SetActive(true);
-            messageController.ShowMessage("Upper!");
+            InitializeAsUpper();
         }
         messageController.HideMessageAfterDelay(1f);
         networkPieceCursor.StartGame();
-        Board.instance.ChangeTo(false);
+
+        // ここは他のプレイヤー復帰した場合はルームに残っていた方のターンになります。
+        Board.instance.ChangeTo(networkController.master);
+    }
+
+    private void InitializeAsUpper()
+    {
+        LowerTD.SetActive(false);
+        LowerGU.SetActive(false);
+        LowerPass.SetActive(false);
+        networkPieceCursor.SetMyTurn(true);
+        networkPieceCursor.SetCursorTracker(upperNetworkCursorTracker);
+        upperNetworkCursorTracker.gameObject.SetActive(false);
+        lowerNetworkCursorTracker.gameObject.SetActive(true);
+        messageController.ShowMessage("Upper!");
+    }
+    private void InitializeAsLower()
+    {
+        UpperTD.SetActive(false);
+        UpperGU.SetActive(false);
+        UpperPass.SetActive(false);
+        networkPieceCursor.SetMyTurn(false);
+        networkPieceCursor.SetCursorTracker(lowerNetworkCursorTracker);
+        upperNetworkCursorTracker.gameObject.SetActive(true);
+        lowerNetworkCursorTracker.gameObject.SetActive(false);
+        messageController.ShowMessage("Lower!");
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
+        // 待機画面の用意
         messageController.ShowMessageWithGoTitleButton("left...");
+        shouldStartGame = false;
+
+        // // 残っているプレイヤーが自動的にStateAuthorityを持つので自分のターンをnetowrkControllerのmasterに登録する。
+        // bool m = networkPieceCursor.myTurn;
+        // networkController.RpcSetMaster(m);
+        // messageController.ShowMessageWithGoTitleButton($"I am {networkController.master}");
+
+        // 次のプレイヤーが来るまでタイマーをリセットし続けるようにする。
+        Timer.StopCounter();
+        pausingPlayer = true;
     }
 
     public void OnInput(NetworkRunner runner, NetworkInput input) { }
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
 
-    public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
+    public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
+    {
+    }
     public void OnConnectedToServer(NetworkRunner runner) { }
     public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason) { }
 

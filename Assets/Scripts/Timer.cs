@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class Timer : MonoBehaviour
 {
     public static int limit = 30;
+    public static bool stop = false;
 
     [SerializeField] Image image;
     public static float counter = 0;
@@ -25,6 +26,7 @@ public class Timer : MonoBehaviour
 
     void Update()
     {
+        if(stop) return;
         // 再現モードなら毎フレーム強制（←重要）
         ApplyLimit();
 
@@ -60,14 +62,16 @@ public class Timer : MonoBehaviour
     void ApplyLimit()
     {
         // 再現時はANL
-        if (KifuReplayContext.HasKifu())
+        // ここはGameRecordのモードをしらべてから分岐させる。
+        if (false)
         {
-            limit = 360000;
+            StopCounter();
+            // limit = 360000;
 
-            if (timelimit != null)
-            {
-                timelimit.text = "ANL";
-            }
+            // if (timelimit != null)
+            // {
+            //     timelimit.text = "ANL";
+            // }
 
             return;
         }
@@ -122,11 +126,22 @@ public class Timer : MonoBehaviour
 
     public static void ResetCounter()
     {
+        stop = false;
         if (counter != 0)
         {
             counter = 0;
             passCounter = 0;
         }
+    }
+
+    public static void StopCounter()
+    {
+        stop = true;
+    }
+
+    public static void StartCounter()
+    {
+        stop = false;
     }
 
     public void Skip(bool p)

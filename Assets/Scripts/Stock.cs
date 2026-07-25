@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.UI;
 
 public class Stock : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class Stock : MonoBehaviour
     public PieceType pieceType;
     public bool isFirstPlayer;
     public GameObject image;
+    public GameObject emptyButton;
     public float imageDistance;
 
     private readonly List<GameObject> stockIcons = new List<GameObject>();
@@ -35,6 +37,30 @@ public class Stock : MonoBehaviour
             }
 
             stockIcons.Add(im);
+        }
+    }
+
+    public void GenerateButton(Color targetColor) // 1. 引数を追加
+    {
+        GameObject eb = Instantiate(emptyButton, transform);
+        eb.transform.localPosition = new Vector3(0, 0, 2);
+        
+        // 2. この2行を追加（元の透明度を保ちつつRGBを変更）
+        Image img = eb.GetComponent<Image>();
+        if (img != null) img.color = new Color(targetColor.r, targetColor.g, targetColor.b, img.color.a);
+
+        Canvas ebCanvas = eb.GetComponent<Canvas>();
+        if (ebCanvas == null)
+        {
+            ebCanvas = eb.AddComponent<Canvas>();
+        }
+
+        if (ebCanvas != null)
+        {
+            // 独自のソート順を使う設定を有効にする
+            ebCanvas.overrideSorting = true;
+            // インスペクターで設定したかった「5」を代入
+            ebCanvas.sortingOrder = 5;
         }
     }
 

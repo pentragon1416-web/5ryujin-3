@@ -7,21 +7,26 @@ public class SessionManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance == null)
+        if (Instance != null && Instance != this)
         {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
+            // 各シーンの UI は、そのシーンに配置された SessionManager を参照している。
+            // 古い永続インスタンスを残して新しい方を破棄すると、復帰後の UI イベントが
+            // 破棄済みのコンポーネントを参照してしまうため、設定を引き継いで交代する。
+            Settings = Instance.Settings;
+            Destroy(Instance.gameObject);
         }
 
-        Settings = new RoomSettings
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+
+        if (Settings.roomNumber == null)
         {
-            roomNumber = "0",
-            turnTime = 45
-        };
+            Settings = new RoomSettings
+            {
+                roomNumber = "0",
+                turnTime = 45
+            };
+        }
     }
 
     public void SetRoomSettings(RoomSettings roomSettings)
@@ -35,6 +40,11 @@ public class SessionManager : MonoBehaviour
     public void SetTurnTime(int t)
     {
         this.Settings.turnTime = t;
+    }
+
+    public string GetRoomNumber()
+    {
+        return Settings.roomNumber;
     }
 }
 

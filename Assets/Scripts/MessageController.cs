@@ -38,6 +38,16 @@ public class MessageController : MonoBehaviour
         StartCoroutine(HideMessageAfterDelayCoroutine(delay));
     }
 
+    public void ShowGoTitleButton()
+    {
+        goTitleButtonObj.SetActive(true);
+    }
+
+    public void HideGoTitleButton()
+    {
+        goTitleButtonObj.SetActive(false);
+    }
+
     private IEnumerator HideMessageAfterDelayCoroutine(float delay)
     {
         yield return new WaitForSeconds(delay);

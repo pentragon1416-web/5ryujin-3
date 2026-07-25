@@ -20,6 +20,15 @@ public class NetworkRecordManager : NetworkBehaviour
         {
             MoveCount = 0;
         }
+        GameRecord.ChangeModeTo(RecordMode.Record);
+        StartCoroutine(Initialize());
+    }
+    IEnumerator Initialize()
+    {
+        // 0.5秒待機
+        yield return new WaitForSeconds(0.5f);
+        moveDataLoader.LoadMoveDataList(GetMoveDataList());
+        // ここに遅延後の処理を書く
     }
 
     [Rpc(RpcSources.All, RpcTargets.All)]
@@ -33,6 +42,7 @@ public class NetworkRecordManager : NetworkBehaviour
 
         Moves.Set(MoveCount, moveData);
         moveDataLoader.LoadMoveData(moveData.ToMoveData());
+        GameRecord.AddMoveData(moveData.ToMoveData());
         MoveCount++;
     }
 
@@ -58,6 +68,18 @@ public class NetworkRecordManager : NetworkBehaviour
     public bool GetTurn()
     {
         return Turn;
+    }
+
+    public List<MoveData> GetMoveDataList()
+    {
+        List<MoveData> moveList = new List<MoveData>(MoveCount);
+
+        for (int i = 0; i < MoveCount; i++)
+        {
+            moveList.Add(Moves.Get(i).ToMoveData());
+        }
+
+        return moveList;
     }
 
     public bool CanAdd(MoveData md)
