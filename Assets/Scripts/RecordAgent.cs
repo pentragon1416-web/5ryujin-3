@@ -9,6 +9,9 @@ public class RecordAgent : MonoBehaviour
     public KifuListUI kifuListUI;
     void Start()
     {
+#if !UNITY_WEBGL
+        return;
+#endif
         // これ一つだけを実行する。
         AsyncFunctions().Forget();
     }

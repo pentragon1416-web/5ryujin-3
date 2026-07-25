@@ -9,18 +9,24 @@ public class SessionManager : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
-            Destroy(gameObject);
-            return;
+            // 各シーンの UI は、そのシーンに配置された SessionManager を参照している。
+            // 古い永続インスタンスを残して新しい方を破棄すると、復帰後の UI イベントが
+            // 破棄済みのコンポーネントを参照してしまうため、設定を引き継いで交代する。
+            Settings = Instance.Settings;
+            Destroy(Instance.gameObject);
         }
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        Settings = new RoomSettings
+        if (Settings.roomNumber == null)
         {
-            roomNumber = "0",
-            turnTime = 45
-        };
+            Settings = new RoomSettings
+            {
+                roomNumber = "0",
+                turnTime = 45
+            };
+        }
     }
 
     public void SetRoomSettings(RoomSettings roomSettings)
